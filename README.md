@@ -1,6 +1,6 @@
 # elaros_mobile_app
 
-Proffesional Software Projects Elaros Wellbeing app. Written in Flutter. 
+Proffesional Software Projects Elaros Wellbeing app. Written in Flutter.
 
 ## Getting Started
 
@@ -25,3 +25,8 @@ samples, guidance on mobile development, and a full API reference.
 
 - [Flutter](https://docs.flutter.dev/development/ui/widgets-intro)
 - [Provider](https://pub.dev/packages/provider)
+
+# CLI Documentation
+
+`bash flutter devices` - list all connected devices
+`bash flutter run` - run the app on the connected device

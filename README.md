@@ -21,3 +21,7 @@ samples, guidance on mobile development, and a full API reference.
 - Use the [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style) as a guideline.
 - Use the [Flutter MVVM architecture](https://docs.flutter.dev/app-architecture/guide) as a guideline.
 
+# Libraries/Frameworks Documentation
+
+- [Flutter](https://docs.flutter.dev/development/ui/widgets-intro)
+- [Provider](https://pub.dev/packages/provider)

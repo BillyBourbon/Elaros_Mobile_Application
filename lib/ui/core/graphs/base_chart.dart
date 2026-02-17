@@ -12,7 +12,7 @@ abstract class BaseChart extends StatelessWidget {
 
   final bool darkTheme;
 
-  final LegendPosition legendPosition;
+  final LegendPosition? legendPosition;
   final LabelCallback? labelYMap;
   final LabelCallback? labelXMap;
 
@@ -48,7 +48,7 @@ abstract class BaseChart extends StatelessWidget {
   });
 
   CristalyseChart buildChart() {
-    final ChartTheme customTheme = ChartTheme(
+    final ChartTheme customThemeLight = ChartTheme(
       backgroundColor: const Color(0xFFF8F9FA),
       plotBackgroundColor: Colors.white,
       primaryColor: const Color(0xFF007ACC), // Brand blue
@@ -80,12 +80,45 @@ abstract class BaseChart extends StatelessWidget {
         fontWeight: FontWeight.w600,
       ),
     );
+    final ChartTheme customThemeDark = ChartTheme(
+      backgroundColor: Colors.black38,
+      plotBackgroundColor: Colors.black45,
+      primaryColor: Colors.teal,
+      borderColor: Colors.black38,
+      gridColor: Colors.black26,
+      axisColor: Colors.black38,
+      gridWidth: 1,
+      axisWidth: 1,
+      pointSizeDefault: 5.0,
+      pointSizeMin: 3.0,
+      pointSizeMax: 15.0,
+      colorPalette: [
+        const Color(0xFF007ACC),
+        const Color(0xFFFF6B35),
+        const Color(0xFF28A745),
+        const Color(0xFFDC3545),
+        const Color(0xFF6F42C1),
+        const Color(0xFF20C997),
+      ],
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 20),
+      axisTextStyle: const TextStyle(
+        fontSize: 11,
+        color: Color(0xFF5F6368),
+        fontWeight: FontWeight.w500,
+      ),
+      axisLabelStyle: const TextStyle(
+        fontSize: 13,
+        color: Color(0xFF202124),
+        fontWeight: FontWeight.w600,
+      ),
+    );
 
     CristalyseChart chart = CristalyseChart()
         .data(data)
         .mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour ?? '')
-        .theme(customTheme)
-        .legend(position: legendPosition);
+        .theme(darkTheme ? customThemeDark : customThemeLight);
+
+    if (legendPosition != null) chart.legend(position: legendPosition);
 
     if (yScaleType == ScaleType.ordinal) {
       chart.scaleYOrdinal(labels: labelYMap, title: yAxisTitle ?? mappingKeyY);

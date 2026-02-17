@@ -24,6 +24,9 @@ abstract class BaseChart extends StatelessWidget {
   final ScaleType yScaleType;
   final ScaleType xScaleType;
 
+  final String? yAxisTitle;
+  final String? xAxisTitle;
+
   const BaseChart({
     super.key,
     required this.data,
@@ -40,29 +43,70 @@ abstract class BaseChart extends StatelessWidget {
     this.xScaleMax,
     this.yScaleType = ScaleType.continuous,
     this.xScaleType = ScaleType.continuous,
+    this.yAxisTitle,
+    this.xAxisTitle,
   });
 
   CristalyseChart buildChart() {
+    final ChartTheme customTheme = ChartTheme(
+      backgroundColor: const Color(0xFFF8F9FA),
+      plotBackgroundColor: Colors.white,
+      primaryColor: const Color(0xFF007ACC), // Brand blue
+      borderColor: const Color(0xFFE1E5E9),
+      gridColor: const Color(0xFFF1F3F4),
+      axisColor: const Color(0xFF5F6368),
+      gridWidth: 0.5,
+      axisWidth: 1.2,
+      pointSizeDefault: 5.0,
+      pointSizeMin: 3.0,
+      pointSizeMax: 15.0,
+      colorPalette: [
+        const Color(0xFF007ACC), // Primary blue
+        const Color(0xFFFF6B35), // Orange accent
+        const Color(0xFF28A745), // Success green
+        const Color(0xFFDC3545), // Warning red
+        const Color(0xFF6F42C1), // Purple
+        const Color(0xFF20C997), // Teal
+      ],
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 20),
+      axisTextStyle: const TextStyle(
+        fontSize: 11,
+        color: Color(0xFF5F6368),
+        fontWeight: FontWeight.w500,
+      ),
+      axisLabelStyle: const TextStyle(
+        fontSize: 13,
+        color: Color(0xFF202124),
+        fontWeight: FontWeight.w600,
+      ),
+    );
+
     CristalyseChart chart = CristalyseChart()
         .data(data)
         .mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour ?? '')
-        .theme(
-          darkTheme
-              ? ChartTheme.solarizedDarkTheme()
-              : ChartTheme.solarizedLightTheme(),
-        )
+        .theme(customTheme)
         .legend(position: legendPosition);
 
     if (yScaleType == ScaleType.ordinal) {
-      chart.scaleYOrdinal(labels: labelYMap);
+      chart.scaleYOrdinal(labels: labelYMap, title: yAxisTitle);
     } else {
-      chart.scaleYContinuous(min: yScaleMin, max: yScaleMax, labels: labelYMap);
+      chart.scaleYContinuous(
+        min: yScaleMin,
+        max: yScaleMax,
+        labels: labelYMap,
+        title: yAxisTitle,
+      );
     }
 
     if (xScaleType == ScaleType.ordinal) {
-      chart.scaleXOrdinal(labels: labelXMap);
+      chart.scaleXOrdinal(labels: labelXMap, title: xAxisTitle);
     } else {
-      chart.scaleXContinuous(min: xScaleMin, max: xScaleMax, labels: labelXMap);
+      chart.scaleXContinuous(
+        min: xScaleMin,
+        max: xScaleMax,
+        labels: labelXMap,
+        title: xAxisTitle,
+      );
     }
 
     return chart;

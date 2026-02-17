@@ -1,54 +1,47 @@
 import 'package:cristalyse/cristalyse.dart';
+import 'package:elaros_mobile_app/ui/core/graphs/base_chart.dart';
 import 'package:flutter/material.dart';
 
-class ScatterChart extends StatelessWidget {
-  final List<Map<String, dynamic>> data;
-  final String mappingKeyX;
-  final String mappingKeyY;
-  final String mappingKeyColour;
+class ScatterChart extends BaseChart {
   final PointShape pointShape;
-  final bool darkTheme;
-  final LegendPosition legendPosition;
+  final double pointSize;
+  final double pointAlpha;
+  final double pointBorderWidth;
+  final YAxis yAxis;
 
-  /// [data] is a list of maps, where each map represents a row in the table.
-  /// [mappingKeyX] is the key of the row that will be used as the x-axis.
-  /// [mappingKeyY] is the key of the row that will be used as the y-axis.
-  /// [mappingKeyColour] is the key of the row that will be used to assign the colour.
-  /// [pointShape] is the shape of the points.
-  /// [darkTheme] is a boolean that determines whether the chart will use the
-  /// dark theme or not.
-  /// [legendPosition] is the position of the legend.
   const ScatterChart({
     super.key,
-    required this.data,
-    required this.mappingKeyX,
-    required this.mappingKeyY,
-    required this.mappingKeyColour,
+    required super.data,
+    required super.mappingKeyX,
+    required super.mappingKeyY,
+    super.mappingKeyColour,
+    super.darkTheme,
+    super.legendPosition,
+    super.labelXMap,
+    super.labelYMap,
+    super.yScaleMin,
+    super.xScaleMin,
+    super.yScaleMax,
+    super.xScaleMax,
+    super.yScaleType,
+    super.xScaleType,
     this.pointShape = PointShape.circle,
-    this.darkTheme = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.pointSize = 8.0,
+    this.pointAlpha = 0.8,
+    this.pointBorderWidth = 1.5,
+    this.yAxis = YAxis.primary,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CristalyseChart()
-        .data(data)
-        .mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour)
-        .geomPoint(
-          size: 8.0,
-          alpha: 0.8,
-          shape: pointShape,
-          borderWidth: 1.5,
-          yAxis: YAxis.primary,
-        )
-        .scaleXContinuous()
-        .scaleYContinuous()
-        .theme(
-          darkTheme
-              ? ChartTheme.solarizedDarkTheme()
-              : ChartTheme.solarizedLightTheme(),
-        )
-        .legend(position: legendPosition)
-        .build();
+    CristalyseChart chart = buildChart().geomPoint(
+      size: pointSize,
+      alpha: pointAlpha,
+      shape: pointShape,
+      borderWidth: pointBorderWidth,
+      yAxis: yAxis,
+    );
+
+    return chart.build();
   }
 }

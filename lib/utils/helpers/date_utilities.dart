@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class DateUtilities {
   static String getTimeString(DateTime dateTime) {
     var hour = dateTime.hour >= 10 ? dateTime.hour : '0${dateTime.hour}';

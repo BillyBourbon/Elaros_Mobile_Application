@@ -1,7 +1,7 @@
 import 'package:cristalyse/cristalyse.dart';
 import 'package:flutter/material.dart';
 
-class ScatterChart extends StatelessWidget {
+class LineChart extends StatelessWidget {
   final List<Map<String, dynamic>> data;
   final String mappingKeyX;
   final String mappingKeyY;
@@ -18,7 +18,7 @@ class ScatterChart extends StatelessWidget {
   /// [darkTheme] is a boolean that determines whether the chart will use the
   /// dark theme or not.
   /// [legendPosition] is the position of the legend.
-  const ScatterChart({
+  const LineChart({
     super.key,
     required this.data,
     required this.mappingKeyX,
@@ -34,11 +34,9 @@ class ScatterChart extends StatelessWidget {
     return CristalyseChart()
         .data(data)
         .mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour)
-        .geomPoint(
-          size: 8.0,
-          alpha: 0.8,
-          shape: pointShape,
-          borderWidth: 1.5,
+        .geomLine(
+          style: LineStyle.solid,
+          strokeWidth: 2.0,
           yAxis: YAxis.primary,
         )
         .scaleXContinuous()

@@ -7,6 +7,8 @@ class PieChart extends BaseChart {
   final double innerRadius;
   final bool showLabels;
   final bool showPercentages;
+  final double explodeDistance;
+  final bool explodeSlices;
 
   const PieChart({
     super.key,
@@ -30,6 +32,8 @@ class PieChart extends BaseChart {
     this.innerRadius = 0,
     this.showLabels = true,
     this.showPercentages = true,
+    this.explodeDistance = 0,
+    this.explodeSlices = false,
   });
 
   @override
@@ -41,7 +45,8 @@ class PieChart extends BaseChart {
           innerRadius: innerRadius,
           showLabels: showLabels,
           showPercentages: showPercentages,
-          labelRadius: outerRadius * 1.05,
+          explodeDistance: explodeDistance,
+          explodeSlices: explodeSlices,
         );
 
     return chart.build();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'Home_Page.dart';
 
 void main() {
@@ -16,3 +17,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+=======
+import 'package:elaros_mobile_app/app.dart';
+import 'package:provider/provider.dart';
+import 'package:elaros_mobile_app/ui/counter/view_models/counter_view_model.dart';
+
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => CounterViewModel(counter: 0),
+      child: const App(),
+    ),
+  );
+}
+>>>>>>> b22b6ceeec5470c5b2d0402bc0b6f475148477b8

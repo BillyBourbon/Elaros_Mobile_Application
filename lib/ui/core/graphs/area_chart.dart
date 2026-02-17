@@ -26,6 +26,8 @@ class AreaChart extends BaseChart {
     super.xScaleMax,
     super.yScaleType,
     super.xScaleType,
+    super.yAxisTitle,
+    super.xAxisTitle,
     this.alpha = 0.7,
     this.strokeWidth = 0.5,
     this.lineStyle = LineStyle.solid,

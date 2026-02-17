@@ -27,6 +27,8 @@ class BarChart extends BaseChart {
     super.xScaleMax,
     super.yScaleType,
     super.xScaleType,
+    super.yAxisTitle,
+    super.xAxisTitle,
     this.barStyle = BarStyle.grouped,
     this.horizontalBars = false,
     this.borderRadius = const BorderRadius.vertical(top: Radius.circular(8)),

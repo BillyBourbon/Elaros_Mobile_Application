@@ -25,6 +25,8 @@ class ScatterChart extends BaseChart {
     super.xScaleMax,
     super.yScaleType,
     super.xScaleType,
+    super.yAxisTitle,
+    super.xAxisTitle,
     this.pointShape = PointShape.circle,
     this.pointSize = 8.0,
     this.pointAlpha = 0.8,

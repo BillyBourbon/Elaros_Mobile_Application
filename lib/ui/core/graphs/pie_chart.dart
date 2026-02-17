@@ -24,6 +24,8 @@ class PieChart extends BaseChart {
     super.xScaleMax,
     super.yScaleType,
     super.xScaleType,
+    super.yAxisTitle,
+    super.xAxisTitle,
     this.outerRadius = 100,
     this.innerRadius = 0,
     this.showLabels = true,

@@ -23,6 +23,8 @@ class LineChart extends BaseChart {
     super.xScaleMax,
     super.yScaleType,
     super.xScaleType,
+    super.yAxisTitle,
+    super.xAxisTitle,
     this.strokeWidth = 2.0,
     this.lineStyle = LineStyle.solid,
     this.yAxis = YAxis.primary,

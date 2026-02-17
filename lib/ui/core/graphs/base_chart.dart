@@ -88,24 +88,24 @@ abstract class BaseChart extends StatelessWidget {
         .legend(position: legendPosition);
 
     if (yScaleType == ScaleType.ordinal) {
-      chart.scaleYOrdinal(labels: labelYMap, title: yAxisTitle);
+      chart.scaleYOrdinal(labels: labelYMap, title: yAxisTitle ?? mappingKeyY);
     } else {
       chart.scaleYContinuous(
         min: yScaleMin,
         max: yScaleMax,
         labels: labelYMap,
-        title: yAxisTitle,
+        title: yAxisTitle ?? mappingKeyY,
       );
     }
 
     if (xScaleType == ScaleType.ordinal) {
-      chart.scaleXOrdinal(labels: labelXMap, title: xAxisTitle);
+      chart.scaleXOrdinal(labels: labelXMap, title: xAxisTitle ?? mappingKeyX);
     } else {
       chart.scaleXContinuous(
         min: xScaleMin,
         max: xScaleMax,
         labels: labelXMap,
-        title: xAxisTitle,
+        title: xAxisTitle ?? mappingKeyX,
       );
     }
 

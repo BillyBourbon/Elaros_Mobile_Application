@@ -26,7 +26,6 @@ class DashboardScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-
             /// HEADER
             Container(
               width: double.infinity,
@@ -72,12 +71,11 @@ class DashboardScreen extends StatelessWidget {
                     BoxShadow(
                       blurRadius: 10,
                       color: Colors.black.withValues(alpha: 0.05),
-                    )
+                    ),
                   ],
                 ),
                 child: const Column(
                   children: [
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -85,7 +83,7 @@ class DashboardScreen extends StatelessWidget {
                           "Current Zone",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        Icon(Icons.favorite_border, color: Colors.green)
+                        Icon(Icons.favorite_border, color: Colors.green),
                       ],
                     ),
 
@@ -110,7 +108,7 @@ class DashboardScreen extends StatelessWidget {
                         Text("Recovery Score 89%"),
                         Text("Current HR 68 bpm"),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -123,9 +121,7 @@ class DashboardScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Key Metrics",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -147,7 +143,6 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -178,10 +173,8 @@ class MetricCard extends StatelessWidget {
           Text(title, style: const TextStyle(color: Colors.grey)),
           Text(
             value,
-            style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-          )
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

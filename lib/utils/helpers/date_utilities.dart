@@ -1,10 +1,21 @@
+import 'dart:developer';
+
 class DateUtilities {
   static String getTimeString(DateTime dateTime) {
-    return '${dateTime.hour}:${dateTime.minute}';
+    var hour = dateTime.hour >= 10 ? dateTime.hour : '0${dateTime.hour}';
+    var minute = dateTime.minute >= 10
+        ? dateTime.minute
+        : '0${dateTime.minute}';
+
+    return '$hour:$minute';
   }
 
   static String getDateString(DateTime dateTime) {
-    return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+    var day = dateTime.day >= 10 ? dateTime.day : '0${dateTime.day}';
+    var month = dateTime.month >= 10 ? dateTime.month : '0${dateTime.month}';
+    var year = dateTime.year;
+
+    return '$day-$month-$year';
   }
 
   static String getDateTimeString(DateTime dateTime) {
@@ -26,6 +37,15 @@ class DateUtilities {
 
     final dateList = dateString.split('-');
     final timeList = timeString.split(':');
+
+    for (var i = 0; i < dateList.length; i++) {
+      int? value = int.tryParse(dateList[i]);
+      if (value == null) {
+        throw Exception(
+          'Invalid date time string. expected format is \'dd-mm-yyyy hh:mm\'',
+        );
+      }
+    }
 
     return DateTime(
       int.parse(dateList[2]),

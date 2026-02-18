@@ -1,5 +1,6 @@
-import 'package:elaros_mobile_app/utils/database/db.dart';
+import 'package:clock/clock.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:elaros_mobile_app/utils/database/db.dart';
 
 class HeartRateService {
   static final HeartRateService _instance = HeartRateService._internal();
@@ -46,9 +47,7 @@ class HeartRateService {
     final List<Map<String, dynamic>> heartRateList = await db.query(
       _tableName,
       where: 'timestamp >= ?',
-      whereArgs: [
-        DateTime.now().subtract(Duration(days: days)).toIso8601String(),
-      ],
+      whereArgs: [clock.now().subtract(Duration(days: days)).toIso8601String()],
     );
 
     return heartRateList;
@@ -62,7 +61,7 @@ class HeartRateService {
       _tableName,
       where: 'timestamp >= ?',
       whereArgs: [
-        DateTime.now().subtract(Duration(hours: hours)).toIso8601String(),
+        clock.now().subtract(Duration(hours: hours)).toIso8601String(),
       ],
     );
 

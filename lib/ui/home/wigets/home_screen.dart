@@ -1,6 +1,6 @@
 // home page. routes to the other views.
 import 'package:flutter/material.dart';
-import 'package:elaros_mobile_app/ui/counter/wigets/counter_screen.dart';
+import 'package:elaros_mobile_app/ui/test_page_two/wigets/test_page_two.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CounterScreen()),
+                  MaterialPageRoute(builder: (context) => TestPageTwo()),
                 );
               },
               child: const Text('Go to Counter Screen'),

@@ -10,7 +10,7 @@ class HeartRateUseCase {
     final data = await heartRateRepository.getHeartRateLastNHours(hours);
 
     return data
-        .map((e) => HeartRateEntity(date: e.date, value: e.value))
+        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
         .toList();
   }
 
@@ -18,7 +18,7 @@ class HeartRateUseCase {
     final data = await heartRateRepository.getHeartRateLastNDays(days);
 
     return data
-        .map((e) => HeartRateEntity(date: e.date, value: e.value))
+        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
         .toList();
   }
 
@@ -29,7 +29,7 @@ class HeartRateUseCase {
     final data = await heartRateRepository.getHeartRateBetweenDates(start, end);
 
     return data
-        .map((e) => HeartRateEntity(date: e.date, value: e.value))
+        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
         .toList();
   }
 }

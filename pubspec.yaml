@@ -40,6 +40,7 @@ dependencies:
   path_provider: ^2.1.5
   sqflite: ^2.4.2
   cristalyse: ^1.17.3
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

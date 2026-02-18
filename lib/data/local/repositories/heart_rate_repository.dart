@@ -26,6 +26,7 @@ class HeartRateRepository {
   /// Get heart rate data from the last N days
   Future<List<HeartRateModel>> getHeartRateLastNDays(int days) async {
     final rawData = await _service.getHeartRateLastNDays(days);
+
     return rawData.map((e) => HeartRateModel.fromMap(e)).toList();
   }
 

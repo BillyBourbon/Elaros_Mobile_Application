@@ -1,8 +1,173 @@
+/*
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const profilescreen ({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({key? key}) : super(key: key);
   @override
+  State<ProfileScreen> createState() ==>_ProfileScreen();
+}
+
+class _ProfileScreen extends State<ProfileScreen> {
+  @override
+  Widget build (BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      body:SafeArea (
+        child: Column(
+        children:[
+        //app bar
+        Padding(padding: const EdgeInsets.symmetric(horizontal:25.0),
+         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            //name
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+            Text(
+              'Profile',
+              style: TextStyle(
+                fontWeight:FontWeight.bold,
+                fontSize:18,
+                ),
+              ),
+              SizedBox(height: 8),
+            Text(
+              'Manage your personal information',
+              //style: TextStyle(fontSize:20),
+              style: TextStyle(
+                fontWeight:FontWeight.bold,
+                fontSize:24,
+                ),
+              ),
+              ],
+            ),
+
+            //profile photo
+            Container(
+              padding:EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(12),
+                ),
+              child:Icon(
+                Icons.person,
+                color:Colors.white,
+                ),
+              ),
+          ],
+          ),
+          ),
+
+          SizedBox(height:25),
+        //manage your personal information
+        //card
+       Padding(
+         padding: const EdgeInsets.symmetric(horizontal:25.0),
+       child: Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.red[100],
+          borderRadius: BorderRadius.circular(12),
+          ),
+
+          child: TextField(
+            decoration:InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              border: InputBorder.none,
+              hintText: "how can we help you?",
+
+            )
+
+            SizedBox(height: 25),
+
+            Container(
+              height:80,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  CategoryCard(
+                    categoryName: 'your goals',
+                    iconImagePath: 'lib/icons/yourgoalpp.png',
+                  ),
+                  CategoryCard(
+                    categoryName:'How Your Zones Are Calculated',
+                  ),
+                  CategoryCard(
+                    categoryName:'Data & Privacy',
+                  ),
+                  /*
+                  CategoryCard(
+                    categoryName:'About Elaros',
+                  ),*/
+                  
+                    ],
+                    ),
+                      
+                  ),
+
+
+                ],
+              ),
+            ),
+
+
+          )
+          child: Row(children: [
+
+          Expanded(
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello User',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize:16,
+                ),
+              ),
+              SizedBox(height: 8),
+                Text(
+                  'fill out the form below',
+                  style: TextStyle(
+                    fontSize: 14,
+                   ),
+                  
+                  ),
+
+                SizedBox(height: 12),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text('get started'),
+                    ),
+                )
+             ],
+
+             ),
+          )
+            //alex/condition
+          ]),
+        ),
+       ),
+
+        //form
+
+        //information about
+      ]
+      )
+    );
+  }
+}
+
+
+
+
   Widget build (BuildContext context) {
     return Scaffold(
       background colour: const color (0xFFF2F2F2),
@@ -98,3 +263,4 @@ class ProfileScreen extends StatelessWidget {
       )
   }
 }
+*/

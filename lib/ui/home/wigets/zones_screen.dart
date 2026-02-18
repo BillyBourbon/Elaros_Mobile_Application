@@ -79,7 +79,7 @@ class ZonesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              ...hrZones.map((zone) => Padding(
+              ...hrZoneDefinitions.map((zone) => Padding(
                 padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                 child: Container(
                   padding: const EdgeInsets.all(16),

@@ -1,33 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:elaros_mobile_app/data/local/services/health_data_service.dart';
+import 'package:elaros_mobile_app/data/local/model/hr_zone.dart';
 
-// HR Zone definitions matching Figma design
-class HRZone {
-  final int number;
-  final String name;
-  final Color color;
-  final Color bgColor;
-  final Color textColor;
-  final String description;
-
-  const HRZone({
-    required this.number,
-    required this.name,
-    required this.color,
-    required this.bgColor,
-    required this.textColor,
-    required this.description,
-  });
-}
-
-const List<HRZone> hrZones = [
-  HRZone(number: 1, name: 'Recovery', color: Color(0xff10b981), bgColor: Color(0xffd1fae5), textColor: Color(0xff065f46), description: 'Safe for rest and recovery'),
-  HRZone(number: 2, name: 'Sustainable', color: Color(0xff3b82f6), bgColor: Color(0xffdbeafe), textColor: Color(0xff1e40af), description: 'Light daily activities'),
-  HRZone(number: 3, name: 'Caution', color: Color(0xfff59e0b), bgColor: Color(0xfffef3c7), textColor: Color(0xff92400e), description: 'Monitor and limit time'),
-  HRZone(number: 4, name: 'Risk', color: Color(0xffef4444), bgColor: Color(0xfffee2e2), textColor: Color(0xff991b1b), description: 'Reduce activity immediately'),
-  HRZone(number: 5, name: 'Overexertion', color: Color(0xffdc2626), bgColor: Color(0xfffecaca), textColor: Color(0xff7f1d1d), description: 'Stop and rest now'),
-];
+// Re-export so views that import from here still get HRZone / hrZoneDefinitions.
+export 'package:elaros_mobile_app/data/local/model/hr_zone.dart';
 
 class HealthViewModel extends ChangeNotifier {
   final HealthDataService _service = HealthDataService();
@@ -35,10 +12,10 @@ class HealthViewModel extends ChangeNotifier {
   bool isLoading = true;
   String? error;
 
-  // Heart rate
+  // Heart rate – all values fetched from the database
   int latestHR = 0;
-  int minHR = 0;
-  int maxHR = 0;
+  int minHR = 0; // resting HR from DB
+  int maxHR = 0; // max HR from DB
   int avgHR = 0;
   List<Map<String, dynamic>> hourlyHeartRate = [];
 
@@ -57,16 +34,38 @@ class HealthViewModel extends ChangeNotifier {
   int sleepAwakeMinutes = 0;
   List<Map<String, dynamic>> sleepBreakdown = [];
 
-  HRZone get currentZone {
-    if (latestHR < 80) return hrZones[0];
-    if (latestHR < 100) return hrZones[1];
-    if (latestHR < 115) return hrZones[2];
-    if (latestHR < 130) return hrZones[3];
-    return hrZones[4];
+  // ---------------------------------------------------------------------------
+  // HRR-based zone calculation (Heart Rate Reserve method)
+  //
+  //   HRR = maxHR - restingHR  (both from DB)
+  //   Zone boundary = restingHR + (HRR × percentage)
+  //
+  // Zone 1 (Recovery):      0–30% HRR
+  // Zone 2 (Sustainable):  30–50% HRR
+  // Zone 3 (Caution):      50–65% HRR
+  // Zone 4 (Risk):         65–80% HRR
+  // Zone 5 (Overexertion): 80–100% HRR
+  // ---------------------------------------------------------------------------
+
+  int get _hrr => maxHR - minHR;
+
+  /// Upper HR boundary for a given HRR percentage, computed from DB values.
+  int zoneBoundary(double pct) => (minHR + (_hrr * pct)).round();
+
+  /// Determine which zone a heart rate value falls into using DB-driven
+  /// resting/max HR and the HRR formula.
+  HRZone zoneForHR(int hr) {
+    if (_hrr <= 0) return hrZoneDefinitions[0];
+    for (final zone in hrZoneDefinitions) {
+      final upper = zoneBoundary(zone.upperPct);
+      if (hr <= upper) return zone;
+    }
+    return hrZoneDefinitions.last;
   }
 
+  HRZone get currentZone => zoneForHR(latestHR);
+
   int get recoveryScore {
-    // Simple recovery score based on resting HR and sleep
     if (minHR == 0) return 0;
     int score = 100;
     if (minHR > 70) score -= (minHR - 70) * 2;
@@ -107,17 +106,9 @@ class HealthViewModel extends ChangeNotifier {
       return {
         'hour': int.parse(row['hour'] as String),
         'avgHR': hr,
-        'zone': _getZoneNumber(hr),
+        'zone': zoneForHR(hr).number,
       };
     }).toList();
-  }
-
-  int _getZoneNumber(int hr) {
-    if (hr < 80) return 1;
-    if (hr < 100) return 2;
-    if (hr < 115) return 3;
-    if (hr < 130) return 4;
-    return 5;
   }
 
   Future<void> _loadSteps() async {

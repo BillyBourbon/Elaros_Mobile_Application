@@ -382,7 +382,7 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildZoneCards(HealthViewModel vm) {
     return Column(
-      children: hrZones.map((zone) {
+      children: hrZoneDefinitions.map((zone) {
         final isActive = zone.number == vm.currentZone.number;
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),

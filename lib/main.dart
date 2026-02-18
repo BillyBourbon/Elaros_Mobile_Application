@@ -1,34 +1,22 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'Home_Page.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DashboardScreen(),
-    );
-  }
-}
-=======
 import 'package:elaros_mobile_app/app.dart';
 import 'package:provider/provider.dart';
-import 'package:elaros_mobile_app/ui/counter/view_models/counter_view_model.dart';
-
+import 'package:elaros_mobile_app/ui/home/view_models/health_view_model.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  }
+
   runApp(
     ChangeNotifierProvider(
-      create: (_) => CounterViewModel(counter: 0),
+      create: (_) => HealthViewModel(),
       child: const App(),
     ),
   );
 }
->>>>>>> b22b6ceeec5470c5b2d0402bc0b6f475148477b8

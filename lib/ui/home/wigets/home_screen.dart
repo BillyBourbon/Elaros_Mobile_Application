@@ -1,6 +1,12 @@
-// home page. routes to the other views.
-import 'package:flutter/material.dart' show AppBar, BuildContext, Center, Scaffold, State, StatefulWidget, Text, Widget;
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
+import 'package:elaros_mobile_app/ui/home/view_models/health_view_model.dart';
+import 'package:elaros_mobile_app/ui/home/wigets/Home_Page.dart';
+import 'package:elaros_mobile_app/ui/home/wigets/insights_screen.dart';
+import 'package:elaros_mobile_app/ui/home/wigets/zones_screen.dart';
+import 'package:elaros_mobile_app/ui/home/wigets/profile_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -11,6 +17,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<HealthViewModel>().loadAllData();
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -20,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Screen')),
       body: _buildBody(),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
@@ -32,15 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
-        return const Center(child: Text('Home'));
+        return const DashboardScreen();
       case 1:
-        return const Center(child: Text('Health Tips'));
+        return const InsightsScreen();
       case 2:
-        return const Center(child: Text('HR Zone'));
+        return const ZonesScreen();
       case 3:
-        return const Center(child: Text('Profile'));
+        return const ProfileScreen();
       default:
-        return const Center(child: Text('Home'));
+        return const DashboardScreen();
     }
   }
 }

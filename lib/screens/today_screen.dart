@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/database_helper.dart'; // Import your helper
-import '../models/heart_rate.dart';
+import 'package:elaros_mobile_app/data/local/services/database_helper.dart';
+import 'package:elaros_mobile_app/data/local/model/heart_rate.dart';
 
 class MetricsDashboard extends StatelessWidget {
   @override

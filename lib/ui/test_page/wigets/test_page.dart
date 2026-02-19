@@ -1,10 +1,10 @@
 import 'package:cristalyse/cristalyse.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/area_chart.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/bar_chart.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/heat_map_chart.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/line_chart.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/pie_chart.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/scatter_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/area_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/bar_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/heat_map_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/line_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/pie_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/scatter_chart.dart';
 import 'package:elaros_mobile_app/utils/helpers/date_utilities.dart';
 import 'package:flutter/material.dart';
 

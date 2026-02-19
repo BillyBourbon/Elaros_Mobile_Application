@@ -1,3 +1,6 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,12 +14,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late ProfilePageViewModel viewModel;
-
-  var textStyle = TextStyle(
-    color: Colors.grey.shade600,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  );
 
   double contentWidth = 350;
 
@@ -39,13 +36,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Consumer<ProfilePageViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.isError) {
-            SnackBar snackBar = _buildErrorSnackBar(viewModel);
+            SnackBar snackBar = buildErrorSnackBar(viewModel);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             });
           }
           if (viewModel.message.isNotEmpty) {
-            SnackBar snackBar = _buildSuccessSnackBar(viewModel);
+            SnackBar snackBar = buildSuccessSnackBar(viewModel);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             });
@@ -58,22 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         },
       ),
-    );
-  }
-
-  SnackBar _buildErrorSnackBar(ProfilePageViewModel viewModel) {
-    return SnackBar(
-      content: Text(viewModel.errorMessage),
-      backgroundColor: Colors.red,
-      duration: const Duration(seconds: 3),
-    );
-  }
-
-  SnackBar _buildSuccessSnackBar(ProfilePageViewModel viewModel) {
-    return SnackBar(
-      content: Text(viewModel.message),
-      backgroundColor: Colors.green,
-      duration: const Duration(seconds: 3),
     );
   }
 

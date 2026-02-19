@@ -17,7 +17,7 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   final double chartHeight = 300;
-  final bool darkTheme = true;
+  final bool darkTheme = false;
 
   List<Map<String, dynamic>> datasetScatterAndLine = [
     {'x': 1, 'y': 2, 'category': 'A'},
@@ -30,6 +30,18 @@ class _TestPageState extends State<TestPage> {
     {'x': 30, 'y': 4, 'category': 'C'},
     {'x': 40, 'y': 5, 'category': 'D'},
     {'x': 50, 'y': 6, 'category': 'E'},
+  ];
+  List<Map<String, dynamic>> datasetLine = [
+    {'x': 1, 'y': 2},
+    {'x': 2, 'y': 3},
+    {'x': 3, 'y': 4},
+    {'x': 4, 'y': 5},
+    {'x': 5, 'y': 6},
+    {'x': 10, 'y': 2},
+    {'x': 20, 'y': 3},
+    {'x': 30, 'y': 4},
+    {'x': 40, 'y': 5},
+    {'x': 50, 'y': 6},
   ];
 
   List<Map<String, dynamic>> datasetBar = [
@@ -117,6 +129,22 @@ class _TestPageState extends State<TestPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text('Heat Map Chart'),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: chartHeight,
+              child: HeatMapChart(
+                data: getFormatedHeatMapData(),
+                mappingKeyX: 'day',
+                mappingKeyY: 'y',
+                mappingKeyColour: 'value',
+                legendPosition: null,
+                darkTheme: darkTheme,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
             const Text('Scatter Chart'),
             const SizedBox(height: 8),
             SizedBox(
@@ -137,7 +165,7 @@ class _TestPageState extends State<TestPage> {
             SizedBox(
               height: chartHeight,
               child: LineChart(
-                data: datasetScatterAndLine,
+                data: datasetLine,
                 mappingKeyX: 'x',
                 mappingKeyY: 'y',
                 mappingKeyColour: 'category',
@@ -152,7 +180,7 @@ class _TestPageState extends State<TestPage> {
             SizedBox(
               height: chartHeight,
               child: AreaChart(
-                data: datasetScatterAndLine,
+                data: datasetLine,
                 mappingKeyX: 'x',
                 mappingKeyY: 'y',
                 mappingKeyColour: 'category',
@@ -192,20 +220,6 @@ class _TestPageState extends State<TestPage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            const Text('Heat Map Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: HeatMapChart(
-                data: getFormatedHeatMapData(),
-                mappingKeyX: 'day',
-                mappingKeyY: 'y',
-                mappingKeyColour: 'value',
-                legendPosition: null,
-                darkTheme: darkTheme,
-              ),
-            ),
           ],
         ),
       ),

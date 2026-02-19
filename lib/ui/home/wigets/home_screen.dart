@@ -1,6 +1,17 @@
 // home page. routes to the other views.
-import 'package:flutter/material.dart' show AppBar, BuildContext, Center, Scaffold, State, StatefulWidget, Text, Widget;
+import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
+import 'package:flutter/material.dart'
+    show
+        AppBar,
+        BuildContext,
+        Center,
+        Scaffold,
+        State,
+        StatefulWidget,
+        Text,
+        Widget;
 import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -38,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return const Center(child: Text('HR Zone'));
       case 3:
-        return const Center(child: Text('Profile'));
+        return ProfileScreen();
       default:
         return const Center(child: Text('Home'));
     }

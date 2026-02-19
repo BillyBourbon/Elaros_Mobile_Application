@@ -1,5 +1,5 @@
 import 'package:cristalyse/cristalyse.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/base_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
 import 'package:flutter/material.dart';
 
 class PieChart extends BaseChart {

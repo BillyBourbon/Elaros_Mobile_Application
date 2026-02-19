@@ -1,13 +1,9 @@
 import 'package:elaros_mobile_app/domain/models/user_profile_model.dart';
 import 'package:elaros_mobile_app/domain/use_cases/profile_use_case.dart';
-import 'package:flutter/material.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/view_models/base_view_model.dart';
 
-class ProfilePageViewModel extends ChangeNotifier {
+class ProfilePageViewModel extends BaseViewModel {
   final ProfileUseCase profileUseCase;
-  bool isLoading = false;
-  String message = '';
-  bool isError = false;
-  String errorMessage = '';
 
   // using two user profiles to retain the original user profile without extra db queries
   UserProfileEntity _userProfile = UserProfileEntity(
@@ -33,14 +29,6 @@ class ProfilePageViewModel extends ChangeNotifier {
   UserProfileEntity get userProfile => _modifiedUserProfile;
 
   ProfilePageViewModel({required this.profileUseCase});
-
-  /// Sets the loading state of the view model and resets the view state
-  void setLoading() {
-    isLoading = true;
-    message = '';
-    isError = false;
-    errorMessage = '';
-  }
 
   /// Fetches the user profile
   Future<void> getUserProfile({bool isInitialLoad = false}) async {
@@ -146,14 +134,13 @@ class ProfilePageViewModel extends ChangeNotifier {
       for (var key in map.keys) {
         try {
           bool isValid = checkFields(key, map[key].toString());
-          print(isValid);
+
           if (!isValid) {
             throw Exception(
               'Invalid value \'${map[key].toString()}\' for \'$key\'',
             );
           }
         } catch (e) {
-          print(e);
           isError = true;
           errorMessage = e.toString();
           isLoading = false;

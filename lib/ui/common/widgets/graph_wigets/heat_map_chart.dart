@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cristalyse/cristalyse.dart';
-import 'package:elaros_mobile_app/ui/core/graphs/base_chart.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
 
 class HeatMapColourGradients {
   static final Map<String, List<Color>> heatMapColourGradients = {

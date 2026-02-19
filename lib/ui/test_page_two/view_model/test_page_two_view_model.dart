@@ -1,16 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/view_models/base_view_model.dart';
 import 'package:elaros_mobile_app/domain/models/heart_rate_model.dart';
 import 'package:elaros_mobile_app/domain/use_cases/heart_rate_use_case.dart';
 
-class TestPageTwoViewModel extends ChangeNotifier {
+class TestPageTwoViewModel extends BaseViewModel {
   final HeartRateUseCase heartRateUseCase;
 
   List<HeartRateEntity> data = [];
-
-  bool isLoading = false;
-  bool isError = false;
-  String errorMessage = '';
-  String message = '';
 
   TestPageTwoViewModel({required this.heartRateUseCase});
 

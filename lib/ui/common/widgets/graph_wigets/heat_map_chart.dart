@@ -60,7 +60,7 @@ class HeatMapChart extends BaseChart {
                     .heatMapColourGradients['blackToYellowToRed']
               : HeatMapColourGradients
                     .heatMapColourGradients['whiteToYellowToRed'],
-          valueFormatter: (value) => (value as int).round().toString(),
+          valueFormatter: (value) => (value as double).round().toString(),
           valueTextStyle: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,

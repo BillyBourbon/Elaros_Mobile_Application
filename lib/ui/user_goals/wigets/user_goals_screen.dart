@@ -25,7 +25,7 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
   }
 
   void _getUserGoalsData() async {
-    await viewModel.getUserGoals(isInitialLoad: false);
+    await viewModel.getUserGoals(isInitialLoad: true);
   }
 
   @override

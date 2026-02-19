@@ -89,7 +89,7 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
     final goal = viewModel.userGoals[index];
 
     int percentCompleted =
-        ((goal.goalValue - goal.currentValue) * 100) ~/ goal.goalValue;
+        ((goal.currentValue - goal.goalValue) * 100) ~/ goal.goalValue;
 
     if (percentCompleted < 0) {
       percentCompleted = 0;

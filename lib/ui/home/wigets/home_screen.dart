@@ -1,6 +1,16 @@
 // home page. routes to the other views.
-import 'package:flutter/material.dart' show AppBar, BuildContext, Center, Scaffold, State, StatefulWidget, Text, Widget;
+import 'package:flutter/material.dart'
+    show
+        AppBar,
+        BuildContext,
+        Center,
+        Scaffold,
+        State,
+        StatefulWidget,
+        Text,
+        Widget;
 import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

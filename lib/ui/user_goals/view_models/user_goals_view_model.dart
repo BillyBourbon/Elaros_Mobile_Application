@@ -13,17 +13,17 @@ class UserGoalsViewModel extends BaseViewModel {
   Future<void> getUserGoals({bool isInitialLoad = false}) async {
     setLoading();
 
-    // try {
-    final data = await userGoalsUseCase.getUserGoals();
-    userGoals = data;
-    if (!isInitialLoad) message = 'Successfully fetched user goals';
-    // } catch (e) {
-    //   isError = true;
-    //   errorMessage = e.toString();
-    // } finally {
-    isLoading = false;
-    notifyListeners();
-    // }
+    try {
+      final data = await userGoalsUseCase.getUserGoals();
+      userGoals = data;
+      if (!isInitialLoad) message = 'Successfully fetched user goals';
+    } catch (e) {
+      isError = true;
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> insertUserGoal(UserGoalEntity userGoal) async {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cristalyse/cristalyse.dart';
 import 'package:elaros_mobile_app/ui/core/graphs/area_chart.dart';
 import 'package:elaros_mobile_app/ui/core/graphs/bar_chart.dart';

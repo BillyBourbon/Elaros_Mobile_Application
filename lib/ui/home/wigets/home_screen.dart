@@ -1,5 +1,7 @@
 // home page. routes to the other views.
+import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
 import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
+import 'package:elaros_mobile_app/ui/home_page/widgets/home_page.dart';
 import 'package:flutter/material.dart'
     show
         AppBar,
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Screen')),
+      appBar: AppBar(title: const Text('Elaros Mobile Health App'), centerTitle: true),
       body: _buildBody(),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
@@ -43,11 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     switch (_selectedIndex) {
       case 0:
-        return const Center(child: Text('Home'));
+        return HomePage();
       case 1:
         return const Center(child: Text('Health Tips'));
       case 2:
-        return const Center(child: Text('HR Zone'));
+        return TestPage();
       case 3:
         return ProfileScreen();
       default:

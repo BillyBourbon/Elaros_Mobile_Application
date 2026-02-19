@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 String defaultUserId = '1';
 
 List<String> existingGoalDataSources = [
@@ -7,3 +9,9 @@ List<String> existingGoalDataSources = [
   'Intensities',
   'SleepLogs',
 ];
+
+var textStyle = TextStyle(
+  color: Colors.grey.shade600,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+);

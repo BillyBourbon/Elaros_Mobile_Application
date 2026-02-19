@@ -1,6 +1,7 @@
 // home page. routes to the other views.
 import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
 import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
+import 'package:elaros_mobile_app/ui/user_goals/wigets/user_goals_screen.dart';
 import 'package:flutter/material.dart'
     show
         AppBar,
@@ -51,6 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return TestPage();
       case 3:
         return ProfileScreen();
+      case 4:
+        return UserGoalsScreen();
       default:
         return const Center(child: Text('Home'));
     }

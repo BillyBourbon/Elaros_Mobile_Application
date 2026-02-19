@@ -23,11 +23,17 @@ class UserGoalsService {
     return _database!;
   }
 
+  void _checkDataSource(String dataSource) {
+    if (!existingGoalDataSources.contains(dataSource)) {
+      throw Exception('Data source \'$dataSource\' is not supported');
+    }
+  }
+
   // GETs
   Future<List<Map<String, dynamic>>> getUserGoals({String? goalName}) async {
     final db = await database;
 
-    final String query = (goalName != null)
+    final String query = (goalName == null)
         ? '''
       SELECT 
         goalName, 
@@ -65,6 +71,8 @@ class UserGoalsService {
   // POSTs
   Future<void> insertUserGoal(UserGoalModel userGoal) async {
     final db = await database;
+
+    _checkDataSource(userGoal.dataSource);
 
     const String query = '''  
       INSERT OR REPLACE INTO UserGoals (
@@ -105,6 +113,8 @@ class UserGoalsService {
   // UPDATEs
   Future<void> updateUserGoal(UserGoalModel userGoal) async {
     final db = await database;
+
+    _checkDataSource(userGoal.dataSource);
 
     const String query = '''  
       UPDATE UserGoals SET

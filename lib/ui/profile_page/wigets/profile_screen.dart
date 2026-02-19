@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
@@ -13,12 +14,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late ProfilePageViewModel viewModel;
-
-  var textStyle = TextStyle(
-    color: Colors.grey.shade600,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  );
 
   double contentWidth = 350;
 

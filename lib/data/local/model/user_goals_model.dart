@@ -2,23 +2,27 @@ class UserGoalModel {
   String goalName;
   String dataSource;
   int goalValue;
+  int? currentValue;
 
   UserGoalModel({
     required this.goalName,
     required this.dataSource,
     required this.goalValue,
+    this.currentValue = 0,
   });
 
   UserGoalModel.fromMap(Map<String, dynamic> map)
-    : goalName = map['goal_name'],
-      dataSource = map['data_source'],
-      goalValue = map['goal_value'];
+    : goalName = map['goalName'],
+      dataSource = map['dataSource'],
+      goalValue = map['goalValue'],
+      currentValue = map['currentValue'];
 
   Map<String, dynamic> toMap() {
     return {
-      'goal_name': goalName,
-      'data_source': dataSource,
-      'goal_value': goalValue,
+      'goalName': goalName,
+      'dataSource': dataSource,
+      'goalValue': goalValue,
+      'currentValue': currentValue ?? 0,
     };
   }
 }

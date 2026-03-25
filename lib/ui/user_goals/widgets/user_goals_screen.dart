@@ -2,6 +2,7 @@ import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
+import 'package:elaros_mobile_app/ui/user_goals/widgets/add_goal_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +34,17 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
     return Scaffold(
       body: Consumer<UserGoalsViewModel>(
         builder: (context, viewModel, child) {
+          // Show add goal overlay when triggered
+          if (viewModel.isAddGoalOverlayOpen) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => AddGoalOverlay(viewModel: viewModel),
+              );
+            });
+          }
+
           if (viewModel.isError) {
             SnackBar snackBar = buildErrorSnackBar(viewModel);
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -78,6 +90,14 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
                   return _buildGoalListItem(viewModel, index);
                 },
               ),
+            ),
+
+            // floating action button located in the bottom right corner to add a new goal. should open the add goal widget overlay
+            FloatingActionButton(
+              onPressed: () {
+                viewModel.openAddGoalOverlay();
+              },
+              child: const Icon(Icons.add),
             ),
           ],
         ),

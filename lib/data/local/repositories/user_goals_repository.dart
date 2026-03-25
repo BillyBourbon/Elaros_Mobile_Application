@@ -1,4 +1,6 @@
+import 'package:clock/clock.dart';
 import 'package:elaros_mobile_app/config/constants/constants.dart';
+import 'package:elaros_mobile_app/data/local/model/grouped_model.dart';
 import 'package:elaros_mobile_app/data/local/model/user_goals_model.dart';
 import 'package:elaros_mobile_app/data/local/repositories/step_count_repository.dart';
 import 'package:elaros_mobile_app/data/local/services/user_goals_service.dart';
@@ -25,23 +27,24 @@ class UserGoalsRepository {
   }
 
   Future<List<UserGoalModel>> getUserGoals() async {
-    final data = await _userGoalsService.getUserGoals();
+    final goalList = await _userGoalsService.getUserGoals();
 
-    if (data.isEmpty) return [];
+    if (goalList.isEmpty) return [];
 
-    final mapped = data.map((e) => UserGoalModel.fromMap(e)).toList();
+    for (var goal in goalList) {
+      if (existingGoalDataSources.contains(goal.dataSource)) {
+        List<GroupedModel> d = await _stepCountRepository.getDataGroupedByDay(
+          clock.now().subtract(Duration(days: 7)),
+          clock.now(),
+        );
 
-    for (var e in mapped) {
-      if (existingGoalDataSources.contains(e.dataSource)) {
-        var data = await _stepCountRepository.getStepCountByDayLastNDays(1);
+        d.sort((a, b) => a.time.compareTo(b.time));
 
-        data.sort((a, b) => a.date.compareTo(b.date));
-
-        e.currentValue = data.last.totalSteps;
+        goal.currentValue = d.last.last;
       }
     }
 
-    return mapped;
+    return goalList;
   }
 
   Future<void> insertUserGoal(UserGoalModel userGoal) async {

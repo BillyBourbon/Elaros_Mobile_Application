@@ -30,7 +30,7 @@ class UserGoalsService {
   }
 
   // GETs
-  Future<List<Map<String, dynamic>>> getUserGoals({String? goalName}) async {
+  Future<List<UserGoalModel>> getUserGoals({String? goalName}) async {
     final db = await database;
 
     final String query = (goalName == null)
@@ -39,7 +39,7 @@ class UserGoalsService {
         goalName, 
         dataSource, 
         goalValue
-      FROM UserGoals
+      FROM $_tableName
       WHERE
         userId = ?;
     '''
@@ -48,7 +48,7 @@ class UserGoalsService {
         goalName, 
         dataSource, 
         goalValue
-      FROM UserGoals
+      FROM $_tableName
       WHERE
         userId = ?
         AND goalName = ?;
@@ -65,7 +65,7 @@ class UserGoalsService {
       queryParams,
     );
 
-    return userGoalList;
+    return userGoalList.map((e) => UserGoalModel.fromMap(e)).toList();
   }
 
   // POSTs

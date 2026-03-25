@@ -22,6 +22,7 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'HR Zone'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Goals'),
+        BottomNavigationBarItem(icon: Icon(Icons.square), label: 'Test 3'),
       ],
       currentIndex: selectedIndex,
       onTap: onTap,

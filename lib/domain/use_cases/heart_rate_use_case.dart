@@ -1,35 +1,28 @@
+import 'package:elaros_mobile_app/data/local/model/heart_rate_model.dart';
 import 'package:elaros_mobile_app/data/local/repositories/heart_rate_repository.dart';
+import 'package:elaros_mobile_app/domain/models/grouped_data_entity.dart';
 import 'package:elaros_mobile_app/domain/models/heart_rate_model.dart';
 
 class HeartRateUseCase {
-  final HeartRateRepository heartRateRepository;
+  final HeartRateRepository _repository;
 
-  HeartRateUseCase({required this.heartRateRepository});
+  HeartRateUseCase(this._repository);
 
-  Future<List<HeartRateEntity>> getHeartRateLastNHours(int hours) async {
-    final data = await heartRateRepository.getHeartRateLastNHours(hours);
+  /// Get latest heart rate entry
+  Future<HeartRateEntity?> getLatestHeartRate() async {
+    final HeartRateModel? latestEntry = await _repository.getLatestEntry();
 
-    return data
-        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
-        .toList();
+    return latestEntry == null
+        ? null
+        : HeartRateEntity(date: latestEntry.time, value: latestEntry.value);
   }
 
-  Future<List<HeartRateEntity>> getHeartRateLastNDays(int days) async {
-    final data = await heartRateRepository.getHeartRateLastNDays(days);
-
-    return data
-        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
-        .toList();
-  }
-
-  Future<List<HeartRateEntity>> getHeartRateBetweenDates(
+  Future<List<GroupedEntity>> getGroupedDataByMinute(
     DateTime start,
-    DateTime end,
+    DateTime? end,
   ) async {
-    final data = await heartRateRepository.getHeartRateBetweenDates(start, end);
+    final results = await _repository.getDataGroupedByMinute(start, end);
 
-    return data
-        .map((e) => HeartRateEntity(date: e.timestamp, value: e.value))
-        .toList();
+    return results.map((e) => GroupedEntity.fromMap(e.toMap())).toList();
   }
 }

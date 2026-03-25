@@ -6,6 +6,7 @@ class UserGoalsViewModel extends BaseViewModel {
   final UserGoalsUseCase userGoalsUseCase;
 
   List<UserGoalEntity> userGoals = [];
+  bool isAddGoalOverlayOpen = false;
 
   UserGoalsViewModel({required this.userGoalsUseCase});
 
@@ -70,5 +71,34 @@ class UserGoalsViewModel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  // opens an overlay displaying a menu to add a new goal
+  void openAddGoalOverlay() {
+    isAddGoalOverlayOpen = true;
+    notifyListeners();
+  }
+
+  // closes the add goal overlay
+  void closeAddGoalOverlay() {
+    isAddGoalOverlayOpen = false;
+    notifyListeners();
+  }
+
+  // adds a new goal with the provided details
+  void addGoal({
+    required String goalName,
+    required String dataSource,
+    required int goalValue,
+  }) {
+    insertUserGoal(
+      UserGoalEntity(
+        goalName: goalName,
+        dataSource: dataSource,
+        goalValue: goalValue,
+        currentValue: 0,
+      ),
+    );
+    closeAddGoalOverlay();
   }
 }

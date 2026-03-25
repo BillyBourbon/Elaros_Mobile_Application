@@ -1,8 +1,10 @@
 // home page. routes to the other views.
+import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/home_page.dart';
-import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
 import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
-import 'package:elaros_mobile_app/ui/user_goals/wigets/user_goals_screen.dart';
+import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
+import 'package:elaros_mobile_app/ui/test_page_three/wigets/test_page_three_new.dart';
+import 'package:elaros_mobile_app/ui/user_goals/widgets/user_goals_screen.dart';
 import 'package:flutter/material.dart'
     show
         AppBar,
@@ -13,7 +15,6 @@ import 'package:flutter/material.dart'
         StatefulWidget,
         Text,
         Widget;
-import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,6 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return ProfileScreen();
       case 4:
         return UserGoalsScreen();
+      case 5:
+        return TestPageThree();
       default:
         return const Center(child: Text('Home'));
     }

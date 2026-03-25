@@ -1,8 +1,8 @@
 class UserGoalEntity {
   String goalName;
   String dataSource;
-  int goalValue;
-  int currentValue;
+  num goalValue;
+  num currentValue;
 
   UserGoalEntity({
     required this.goalName,
@@ -14,8 +14,8 @@ class UserGoalEntity {
   UserGoalEntity.fromMap(Map<String, dynamic> map)
     : goalName = map['goalName'],
       dataSource = map['dataSource'],
-      goalValue = map['goalValue'],
-      currentValue = map['currentValue'];
+      goalValue = map['goalValue'] as num,
+      currentValue = map['currentValue'] as num;
 
   Map<String, dynamic> toMap() {
     return {

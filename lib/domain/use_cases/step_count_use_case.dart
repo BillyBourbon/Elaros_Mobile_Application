@@ -6,11 +6,12 @@ class StepCountUseCase {
 
   StepCountUseCase({required this.stepCountRepository});
 
-  Future<List<StepCountEntity>> getStepCountByDayLastNDays(int days) async {
-    final data = await stepCountRepository.getStepCountByDayLastNDays(days);
+  /// Get latest step count entry
+  Future<StepCountEntity?> getLatestStepCount() async {
+    final latestEntry = await stepCountRepository.getLatestEntry();
 
-    return data
-        .map((e) => StepCountEntity(date: e.date, value: e.totalSteps))
-        .toList();
+    return latestEntry == null
+        ? null
+        : StepCountEntity(date: latestEntry.time, value: latestEntry.value);
   }
 }

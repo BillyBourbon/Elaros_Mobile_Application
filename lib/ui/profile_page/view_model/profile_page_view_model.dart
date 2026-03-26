@@ -26,6 +26,8 @@ class ProfilePageViewModel extends BaseViewModel {
     medicalCondition: null,
   );
 
+  bool isSettingsOverlayOpen = false;
+
   UserProfileEntity get userProfile => _modifiedUserProfile;
 
   ProfilePageViewModel({required this.profileUseCase});
@@ -124,6 +126,9 @@ class ProfilePageViewModel extends BaseViewModel {
     if (_modifiedUserProfile.equals(_userProfile)) {
       isError = true;
       errorMessage = 'Aborting save as User profile is unchanged';
+
+      if (isSettingsOverlayOpen) closeSettingsOverlay();
+
       isLoading = false;
       notifyListeners();
       return;
@@ -173,5 +178,15 @@ class ProfilePageViewModel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  void openSettingsOverlay() {
+    isSettingsOverlayOpen = true;
+    notifyListeners();
+  }
+
+  void closeSettingsOverlay() {
+    isSettingsOverlayOpen = false;
+    notifyListeners();
   }
 }

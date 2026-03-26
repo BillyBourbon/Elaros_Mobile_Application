@@ -15,6 +15,8 @@ class UserGoalsScreen extends StatefulWidget {
 
 class _UserGoalsScreenState extends State<UserGoalsScreen> {
   late UserGoalsViewModel viewModel;
+  ThemeData? theme;
+  ColorScheme? colourScheme;
 
   @override
   void initState() {
@@ -31,39 +33,44 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
+    colourScheme = theme!.colorScheme;
+
     return Scaffold(
-      body: Consumer<UserGoalsViewModel>(
-        builder: (context, viewModel, child) {
-          // Show add goal overlay when triggered
-          if (viewModel.isAddGoalOverlayOpen) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => AddGoalOverlay(viewModel: viewModel),
-              );
-            });
-          }
-
-          if (viewModel.isError) {
-            SnackBar snackBar = buildErrorSnackBar(viewModel);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            });
-          }
-          if (viewModel.message.isNotEmpty) {
-            SnackBar snackBar = buildSuccessSnackBar(viewModel);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            });
-          }
-
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return _buildBody(viewModel);
-          }
-        },
+      appBar: AppBar(title: const Text('Goals'), centerTitle: true),
+      body: DecoratedBox(
+        decoration: BoxDecoration(color: colourScheme!.primary),
+        child: Consumer<UserGoalsViewModel>(
+          builder: (context, viewModel, child) {
+            // Show add goal overlay when triggered
+            if (viewModel.isAddGoalOverlayOpen) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => AddGoalOverlay(viewModel: viewModel),
+                );
+              });
+            }
+            if (viewModel.isError) {
+              SnackBar snackBar = buildErrorSnackBar(viewModel);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              });
+            }
+            if (viewModel.message.isNotEmpty) {
+              SnackBar snackBar = buildSuccessSnackBar(viewModel);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              });
+            }
+            if (viewModel.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return _buildBody(viewModel);
+            }
+          },
+        ),
       ),
     );
   }
@@ -73,18 +80,25 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
 
-            const Text('Goals List'),
+            const Text(
+              'Set your goals and keep a track of your progress!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
+              textAlign: TextAlign.center,
+            ),
 
             const SizedBox(height: 8),
 
             SizedBox(
-              height: 300,
+              height: 400,
               child: ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (context, index) => const Divider(),
+                shrinkWrap: false,
+                separatorBuilder: (context, index) => const SizedBox(height: 8),
                 itemCount: viewModel.userGoals.length,
                 itemBuilder: (context, index) {
                   return _buildGoalListItem(viewModel, index);
@@ -92,13 +106,17 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
               ),
             ),
 
-            // floating action button located in the bottom right corner to add a new goal. should open the add goal widget overlay
+            const SizedBox(height: 20),
+
             FloatingActionButton(
+              shape: const CircleBorder(),
               onPressed: () {
                 viewModel.openAddGoalOverlay();
               },
               child: const Icon(Icons.add),
             ),
+
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -108,30 +126,32 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
   Widget _buildGoalListItem(UserGoalsViewModel viewModel, int index) {
     final goal = viewModel.userGoals[index];
 
-    int percentCompleted =
-        ((goal.currentValue - goal.goalValue) * 100) ~/ goal.goalValue;
+    int goalValue = goal.goalValue.toInt();
+    int currentValue = goal.currentValue.toInt();
+
+    double percentCompleted = (currentValue / goalValue) * 100;
 
     if (percentCompleted < 0) {
       percentCompleted = 0;
     }
-    if (percentCompleted > 100) {
-      percentCompleted = 100;
-    }
 
     Color iconColour = Colors.red;
 
-    if (percentCompleted >= 50) {
-      iconColour = Colors.yellow;
-    }
-
     if (percentCompleted >= 100) {
       iconColour = Colors.green;
+    } else if (percentCompleted >= 50) {
+      iconColour = Colors.yellow;
+    } else if (percentCompleted >= 25) {
+      iconColour = Colors.orange;
+    } else {
+      iconColour = Colors.red;
     }
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: colourScheme!.secondary,
         border: Border(
           bottom: BorderSide(color: Colors.grey.shade300, width: 1),
         ),
@@ -141,16 +161,17 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
         children: [
           SizedBox(
             width: 150,
-            child: Text('Goal: ${goal.goalName}', style: textStyle),
+            child: Text(
+              'Goal: ${goal.goalName} (${percentCompleted.toStringAsFixed(0)}%)',
+              style: textStyle,
+            ),
           ),
 
           const SizedBox(width: 8),
-          // SizedBox(width: 100, child: Text(goal.dataSource, style: textStyle)),
-          // const SizedBox(height: 20),
           SizedBox(
             width: 120,
             child: Text(
-              'Target: ${goal.goalValue.toString()} | Current: ${goal.currentValue.toString()}',
+              'Target: ${goalValue.toString()} | Current: ${currentValue.toString()}',
               style: textStyle,
             ),
           ),

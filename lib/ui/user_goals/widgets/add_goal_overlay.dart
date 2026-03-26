@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text_input.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -48,27 +49,24 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
+              UserInputText(
+                title: 'Goal Name',
+                hintText: 'e.g., Daily Steps',
                 controller: _goalNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Goal Name',
-                  hintText: 'e.g., Daily Steps',
-                ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a goal name';
+                  if (value == null || value.isEmpty || value.trim().isEmpty) {
+                    return 'Please enter a valid goal name';
                   }
+
                   return null;
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+
+              UserInputText(
+                title: 'Data Source',
+                hintText: 'e.g., StepCount',
                 controller: _dataSourceController,
-                decoration: const InputDecoration(
-                  labelText: 'Data Source',
-                  hintText:
-                      'e.g., StepCount', // names listed in constants so should make this a dropdown
-                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a data source';
@@ -77,13 +75,11 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+
+              UserInputText(
+                title: 'Goal Value',
+                hintText: 'e.g., 10000',
                 controller: _goalValueController,
-                decoration: const InputDecoration(
-                  labelText: 'Goal Value',
-                  hintText: 'e.g., 10000',
-                ),
-                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a goal value';

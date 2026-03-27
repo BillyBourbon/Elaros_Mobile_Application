@@ -1,4 +1,4 @@
-import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text_input.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text/text_input.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
 import 'package:flutter/material.dart';
 

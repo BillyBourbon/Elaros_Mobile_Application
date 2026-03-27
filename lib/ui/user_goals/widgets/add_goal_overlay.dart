@@ -1,5 +1,8 @@
-import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text_input.dart';
+import 'package:elaros_mobile_app/config/constants/constants.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/input_elements/dropdown/dropdown_input.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text/text_input.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
+import 'package:elaros_mobile_app/utils/helpers/text_utilities.dart';
 import 'package:flutter/material.dart';
 
 class AddGoalOverlay extends StatefulWidget {
@@ -14,13 +17,12 @@ class AddGoalOverlay extends StatefulWidget {
 class _AddGoalOverlayState extends State<AddGoalOverlay> {
   final _formKey = GlobalKey<FormState>();
   final _goalNameController = TextEditingController();
-  final _dataSourceController = TextEditingController();
   final _goalValueController = TextEditingController();
+  String _goalType = '';
 
   @override
   void dispose() {
     _goalNameController.dispose();
-    _dataSourceController.dispose();
     _goalValueController.dispose();
     super.dispose();
   }
@@ -29,7 +31,7 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
     if (_formKey.currentState!.validate()) {
       widget.viewModel.addGoal(
         goalName: _goalNameController.text,
-        dataSource: _dataSourceController.text,
+        dataSource: _goalType,
         goalValue: int.parse(_goalValueController.text),
       );
 
@@ -63,15 +65,20 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
               ),
               const SizedBox(height: 16),
 
-              UserInputText(
-                title: 'Data Source',
-                hintText: 'e.g., StepCount',
-                controller: _dataSourceController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a data source';
-                  }
-                  return null;
+              UserInputDropdown(
+                title: 'Goal Type',
+                hintText: '',
+                options: existingGoalDataSources
+                    .map((e) => TextUtilities.splitCamelCase(e))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _goalType = value
+                        .toString()
+                        .split(' ')
+                        .map((e) => TextUtilities.capitalize(e.trim()))
+                        .join('');
+                  });
                 },
               ),
               const SizedBox(height: 16),

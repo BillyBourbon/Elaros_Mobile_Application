@@ -101,6 +101,7 @@ abstract class BaseHealthDataService<RawModel> {
       SELECT
         time,
         COUNT(*) AS entries,
+        SUM(value) AS total,
         MAX(CASE WHEN rn_asc = 1 THEN value END) AS first,
         MAX(CASE WHEN rn_desc = 1 THEN value END) AS last,
         MAX(value) AS maximum,
@@ -156,6 +157,7 @@ abstract class BaseHealthDataService<RawModel> {
       SELECT
         time,
         COUNT(*) AS entries,
+        SUM(value) AS total,
         MAX(CASE WHEN rn_asc = 1 THEN value END) AS first,
         MAX(CASE WHEN rn_desc = 1 THEN value END) AS last,
         MAX(value) AS maximum,
@@ -211,6 +213,7 @@ abstract class BaseHealthDataService<RawModel> {
       SELECT
         time,
         COUNT(*) AS entries,
+        SUM(value) AS total,
         MAX(CASE WHEN rn_asc = 1 THEN value END) AS first,
         MAX(CASE WHEN rn_desc = 1 THEN value END) AS last,
         MAX(value) AS maximum,
@@ -266,6 +269,7 @@ abstract class BaseHealthDataService<RawModel> {
       SELECT
         time,
         COUNT(*) AS entries,
+        SUM(value) AS total,
         MAX(CASE WHEN rn_asc = 1 THEN value END) AS first,
         MAX(CASE WHEN rn_desc = 1 THEN value END) AS last,
         MAX(value) AS maximum,

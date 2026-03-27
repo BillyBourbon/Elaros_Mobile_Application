@@ -34,13 +34,13 @@ class UserGoalsRepository {
     for (var goal in goalList) {
       if (existingGoalDataSources.contains(goal.dataSource)) {
         List<GroupedModel> d = await _stepCountRepository.getDataGroupedByDay(
-          clock.now().subtract(Duration(days: 7)),
-          clock.now(),
+          start: clock.now().subtract(Duration(days: 7)),
+          end: clock.now(),
         );
 
         d.sort((a, b) => a.time.compareTo(b.time));
 
-        goal.currentValue = d.last.last;
+        goal.currentValue = d.last.total;
       }
     }
 

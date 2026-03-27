@@ -15,7 +15,7 @@ class IntensitiesStatesService {
   }
 
   static Database? _database;
-  static final String _tableName = 'IntensitiesStates';
+  static final String _tableName = 'IntensityStates';
 
   Future<Database> get database async {
     if (_database != null) return _database!;

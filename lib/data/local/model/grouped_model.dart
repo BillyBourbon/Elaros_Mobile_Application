@@ -1,6 +1,7 @@
 class GroupedModel {
   final DateTime time;
   final int entries;
+  final double total;
   final double first;
   final double last;
   final double maximum;
@@ -11,6 +12,7 @@ class GroupedModel {
   GroupedModel({
     required this.time,
     required this.entries,
+    required this.total,
     required this.first,
     required this.last,
     required this.maximum,
@@ -23,6 +25,7 @@ class GroupedModel {
     return {
       'time': time.toIso8601String(),
       'entries': entries,
+      'total': total,
       'first': first,
       'last': last,
       'maximum': maximum,
@@ -36,6 +39,7 @@ class GroupedModel {
     return GroupedModel(
       time: DateTime.parse(map['time']),
       entries: (map['entries'] as num).toInt(),
+      total: (map['total'] as num).toDouble(),
       first: (map['first'] as num).toDouble(),
       last: (map['last'] as num).toDouble(),
       maximum: (map['maximum'] as num).toDouble(),
@@ -48,6 +52,7 @@ class GroupedModel {
   GroupedModel copyWith({
     DateTime? time,
     int? entries,
+    double? total,
     double? first,
     double? last,
     double? maximum,
@@ -58,6 +63,7 @@ class GroupedModel {
     return GroupedModel(
       time: time ?? this.time,
       entries: entries ?? this.entries,
+      total: total ?? this.total,
       first: first ?? this.first,
       last: last ?? this.last,
       maximum: maximum ?? this.maximum,

@@ -6,16 +6,16 @@ import 'package:elaros_mobile_app/data/local/services/intensities_service.dart';
 import 'package:elaros_mobile_app/data/local/services/intensities_states_service.dart';
 
 class IntensitiesRepository
-    extends BaseHealthDataRepository<IntensitiesModel, IntensitiesService> {
+    extends BaseHealthDataRepository<SleepModel, SleepService> {
   static final _intensityStatesService = IntensitiesStatesService();
 
   static final IntensitiesRepository _instance =
-      IntensitiesRepository._internal(IntensitiesService());
+      IntensitiesRepository._internal(SleepService());
 
   factory IntensitiesRepository() => _instance;
   IntensitiesRepository._internal(super.service);
 
-  factory IntensitiesRepository.forTest(IntensitiesService service) {
+  factory IntensitiesRepository.forTest(SleepService service) {
     return IntensitiesRepository._internal(service);
   }
 

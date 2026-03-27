@@ -1,4 +1,3 @@
-import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
@@ -163,7 +162,11 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
             width: 150,
             child: Text(
               'Goal: ${goal.goalName} (${percentCompleted.toStringAsFixed(0)}%)',
-              style: textStyle,
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
 
@@ -172,7 +175,11 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
             width: 120,
             child: Text(
               'Target: ${goalValue.toString()} | Current: ${currentValue.toString()}',
-              style: textStyle,
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
 

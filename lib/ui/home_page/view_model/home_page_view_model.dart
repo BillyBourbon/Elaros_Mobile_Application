@@ -33,7 +33,7 @@ class HomePageViewModel extends BaseViewModel {
 
     await calculateHRV();
 
-    await calculateHRZones();
+    // await calculateHRZones();
     getHRZoneRanges();
 
     await getLatestDaysStepCount();
@@ -41,6 +41,10 @@ class HomePageViewModel extends BaseViewModel {
     await getTodaysCalories();
 
     await calculateEnergyScore();
+
+    await getLastFourWeeksStepCount();
+
+    notifyListeners();
   }
 
   // ================================ Heart Rate
@@ -55,9 +59,9 @@ class HomePageViewModel extends BaseViewModel {
 
   double get maxHeartRatePast24Hr => _maxHeartRatePast24Hr ?? 0;
 
-  List<HeartRateEntity>? _allHeartRatePast24Hr;
+  List<GroupedEntity>? _allHeartRatePast24Hr;
 
-  List<HeartRateEntity> get allHeartRatePast24Hr => _allHeartRatePast24Hr ?? [];
+  List<GroupedEntity> get allHeartRatePast24Hr => _allHeartRatePast24Hr ?? [];
 
   Future<void> getLatestHeartRate() async {
     setLoading();
@@ -83,7 +87,7 @@ class HomePageViewModel extends BaseViewModel {
   Future<void> getHeartRateLast24Hr() async {
     setLoading();
     try {
-      final data = await heartRateUseCase.getAllHeartRateBetween(
+      final data = await heartRateUseCase.getGroupedDataByMinute(
         clock.now().subtract(const Duration(days: 1)),
         clock.now(),
       );
@@ -101,14 +105,14 @@ class HomePageViewModel extends BaseViewModel {
   Future<void> getHaxHeartRateLast24Hr() async {
     setLoading();
     try {
-      final data = await heartRateUseCase.getGroupedDataByDay(
-        clock.now().subtract(const Duration(days: 1)),
+      final data = await heartRateUseCase.getGroupedDataByHour(
+        clock.now().subtract(const Duration(hours: 24)),
         clock.now(),
       );
 
-      _maxHeartRatePast24Hr = data.first.maximum > data.last.maximum
-          ? data.first.maximum
-          : data.last.maximum;
+      _maxHeartRatePast24Hr = data
+          .reduce((prev, curr) => prev.maximum > curr.maximum ? prev : curr)
+          .maximum;
     } catch (e) {
       isError = true;
       errorMessage = e.toString();
@@ -118,7 +122,7 @@ class HomePageViewModel extends BaseViewModel {
     }
   }
 
-  // hrv
+  // ================================ hrv
 
   HeartRateVariabilityResult? _hrv;
 
@@ -136,7 +140,11 @@ class HomePageViewModel extends BaseViewModel {
         return;
       }
 
-      final data = await heartRateUseCase.calculateHRV(_allHeartRatePast24Hr!);
+      final data = await heartRateUseCase.calculateHRV(
+        _allHeartRatePast24Hr!
+            .map((e) => HeartRateEntity(value: e.median, date: e.time))
+            .toList(),
+      );
 
       _hrv = data;
     } catch (e) {
@@ -148,52 +156,15 @@ class HomePageViewModel extends BaseViewModel {
     }
   }
 
-  // hr zones
-  HeartRateZoneResult? _currentHrZone;
-
-  HeartRateZoneResult get currentHrZone =>
-      _currentHrZone ??
-      HeartRateZoneResult(
-        currentHeartRate: 0,
-        currentZone: 'Unknown',
-        zonePercentages: {},
-      );
-
+  // ================================ hr zones
   List<HeartRateZone>? _hrZoneRanges;
 
   List<HeartRateZone> get hrZoneRanges => _hrZoneRanges ?? [];
-
-  Future<void> calculateHRZones() async {
-    setLoading();
-    try {
-      if (_allHeartRatePast24Hr == null) {
-        await getHeartRateLast24Hr();
-      }
-
-      if (_allHeartRatePast24Hr == null || _allHeartRatePast24Hr!.isEmpty) {
-        return;
-      }
-
-      final data = await heartRateUseCase.calculateHRZones(
-        _allHeartRatePast24Hr!,
-        maxHeartRatePast24Hr,
-      );
-
-      _currentHrZone = data;
-    } catch (e) {
-      isError = true;
-      errorMessage = e.toString();
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
 
   void getHRZoneRanges() {
     setLoading();
     try {
       final data = heartRateUseCase.calculateHRZoneRanges(maxHeartRatePast24Hr);
-
       _hrZoneRanges = data;
     } catch (e) {
       isError = true;
@@ -206,8 +177,10 @@ class HomePageViewModel extends BaseViewModel {
 
   // ================================ Step Count
   List<GroupedEntity>? _todaysStepCountByHour;
+  List<GroupedEntity>? _lastFourWeeksStepData;
 
   List<GroupedEntity>? get todaysStepCountByHour => _todaysStepCountByHour;
+  List<GroupedEntity> get lastFourWeeksStepData => _lastFourWeeksStepData ?? [];
 
   double get totalDailySteps =>
       (_todaysStepCountByHour == null || _todaysStepCountByHour!.isEmpty)
@@ -229,6 +202,21 @@ class HomePageViewModel extends BaseViewModel {
       }
 
       _todaysStepCountByHour = data;
+    } catch (e) {
+      isError = true;
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getLastFourWeeksStepCount() async {
+    setLoading();
+    try {
+      final data = await stepCountUseCase.getGroupedDataByDays(days: (4 * 7));
+
+      _lastFourWeeksStepData = data;
     } catch (e) {
       isError = true;
       errorMessage = e.toString();
@@ -296,11 +284,10 @@ class HomePageViewModel extends BaseViewModel {
       final caloriesData = await caloriesUseCase.getPast24Hrs();
       final stepCountData = await stepCountUseCase.getPast24Hrs();
 
-      // If any data is missing, use default values to still calculate a score
       final validHeartRateData = heartRateData ?? [];
-      final validSleepData = sleepData ?? [];
-      final validCaloriesData = caloriesData ?? [];
-      final validStepCountData = stepCountData ?? [];
+      final validSleepData = sleepData;
+      final validCaloriesData = caloriesData;
+      final validStepCountData = stepCountData;
 
       final energyScore = EnergyScoreCalculator.calculateEnergyScore(
         weight: 100,

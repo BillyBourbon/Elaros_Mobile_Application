@@ -47,28 +47,55 @@ abstract class BaseChart extends StatelessWidget {
     this.xAxisTitle,
   });
 
-  CristalyseChart buildChart() {
-    final ChartTheme customThemeLight = ChartTheme(
+  ChartTheme buildChartTheme({
+    required Color backgroundColor,
+    required Color plotBackgroundColor,
+    required Color primaryColor,
+    required Color borderColor,
+    required Color gridColor,
+    required Color axisColor,
+    required TextStyle axisTextStyle,
+    required TextStyle axisLabelStyle,
+    List<Color>? colorPalette,
+  }) {
+    final List<Color> defaultColorPalette = [
+      const Color(0xFF007ACC),
+      const Color(0xFFFF6B35),
+      const Color(0xFF28A745),
+      const Color(0xFFDC3545),
+      const Color(0xFF6F42C1),
+      const Color(0xFF20C997),
+    ];
+
+    return ChartTheme(
+      backgroundColor: backgroundColor,
+      plotBackgroundColor: plotBackgroundColor,
+      primaryColor: primaryColor,
+      borderColor: borderColor,
+      gridColor: gridColor,
+      axisColor: axisColor,
+      axisTextStyle: axisTextStyle,
+      axisLabelStyle: axisLabelStyle,
+
+      colorPalette: colorPalette ?? defaultColorPalette,
+
+      gridWidth: 0.2,
+      axisWidth: 1.0,
+      pointSizeDefault: 5.0,
+      pointSizeMin: 3.0,
+      pointSizeMax: 20.0,
+      padding: const EdgeInsets.fromLTRB(5, 10, 10, 5),
+    );
+  }
+
+  CristalyseChart buildChart({bool noMapping = false}) {
+    final ChartTheme customThemeLight = buildChartTheme(
       backgroundColor: const Color(0xFFF8F9FA),
       plotBackgroundColor: Colors.white,
-      primaryColor: const Color(0xFF007ACC), // Brand blue
+      primaryColor: const Color(0xFF007ACC),
       borderColor: const Color(0xFFE1E5E9),
       gridColor: const Color(0xFFF1F3F4),
       axisColor: const Color(0xFF5F6368),
-      gridWidth: 0.5,
-      axisWidth: 1.2,
-      pointSizeDefault: 5.0,
-      pointSizeMin: 3.0,
-      pointSizeMax: 15.0,
-      colorPalette: [
-        const Color(0xFF007ACC), // Primary blue
-        const Color(0xFFFF6B35), // Orange accent
-        const Color(0xFF28A745), // Success green
-        const Color(0xFFDC3545), // Warning red
-        const Color(0xFF6F42C1), // Purple
-        const Color(0xFF20C997), // Teal
-      ],
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 20),
       axisTextStyle: const TextStyle(
         fontSize: 11,
         color: Color(0xFF5F6368),
@@ -80,27 +107,14 @@ abstract class BaseChart extends StatelessWidget {
         fontWeight: FontWeight.w600,
       ),
     );
-    final ChartTheme customThemeDark = ChartTheme(
+
+    final ChartTheme customThemeDark = buildChartTheme(
       backgroundColor: Colors.black38,
       plotBackgroundColor: Colors.black45,
       primaryColor: Colors.teal,
       borderColor: Colors.black38,
       gridColor: Colors.black26,
       axisColor: Colors.black38,
-      gridWidth: 1,
-      axisWidth: 1,
-      pointSizeDefault: 5.0,
-      pointSizeMin: 3.0,
-      pointSizeMax: 15.0,
-      colorPalette: [
-        const Color(0xFF007ACC),
-        const Color(0xFFFF6B35),
-        const Color(0xFF28A745),
-        const Color(0xFFDC3545),
-        const Color(0xFF6F42C1),
-        const Color(0xFF20C997),
-      ],
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 20),
       axisTextStyle: const TextStyle(
         fontSize: 11,
         color: Color(0xFF5F6368),
@@ -115,8 +129,14 @@ abstract class BaseChart extends StatelessWidget {
 
     CristalyseChart chart = CristalyseChart()
         .data(data)
-        .mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour ?? '')
         .theme(darkTheme ? customThemeDark : customThemeLight);
+    if (!noMapping) {
+      if (mappingKeyColour != null) {
+        chart.mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour);
+      } else {
+        chart.mapping(x: mappingKeyX, y: mappingKeyY);
+      }
+    }
 
     if (legendPosition != null) chart.legend(position: legendPosition);
 
@@ -128,6 +148,7 @@ abstract class BaseChart extends StatelessWidget {
         max: yScaleMax,
         labels: labelYMap,
         title: yAxisTitle ?? mappingKeyY,
+        tickConfig: TickConfig(simpleLinear: true),
       );
     }
 

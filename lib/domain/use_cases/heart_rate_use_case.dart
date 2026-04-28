@@ -94,13 +94,14 @@ class HeartRateUseCase {
 
   Future<HeartRateZoneResult> calculateHRZones(
     List<HeartRateEntity> list,
+    HeartRateEntity currentHeartRate,
     double maxHeartRate,
   ) async {
     UserProfileEntity userProfile = await _getUserProfile();
 
     return HeartRateZoneCalculator.calculateZones(
       data: list,
-      current: HeartRateEntity(value: list.last.value, date: clock.now()),
+      current: currentHeartRate,
       userProfile: userProfile,
       hrv: await calculateHRV(list),
       maxHeartRate: maxHeartRate,

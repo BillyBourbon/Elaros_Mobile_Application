@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:elaros_mobile_app/data/local/model/grouped_model.dart';
 import 'package:elaros_mobile_app/utils/database/db.dart';
+import 'package:elaros_mobile_app/utils/helpers/date_utilities.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class BaseHealthDataService<RawModel> {
@@ -37,7 +38,7 @@ abstract class BaseHealthDataService<RawModel> {
         $timeColumn as time,
         $valueColumn as value
       FROM $tableName
-      ORDER BY $timeColumn DESC
+      ORDER BY $timeColumn ASC
       LIMIT 1
       ''', []);
 
@@ -113,7 +114,7 @@ abstract class BaseHealthDataService<RawModel> {
             END) AS median
       FROM ranked
       GROUP BY time
-      ORDER BY time DESC;
+      ORDER BY time ASC;
     ''';
 
     final List<Map<String, dynamic>> results = await db.rawQuery(query, [
@@ -169,15 +170,28 @@ abstract class BaseHealthDataService<RawModel> {
             END) AS median
       FROM ranked
       GROUP BY time
-      ORDER BY time DESC;
+      ORDER BY time ASC;
     ''';
 
+    final startString = DateUtilities.getDateStringForQuery(start);
+    final endString = DateUtilities.getDateStringForQuery(end);
+
     final List<Map<String, dynamic>> results = await db.rawQuery(query, [
-      start.toIso8601String(),
-      end.toIso8601String(),
+      startString,
+      endString,
     ]);
 
-    return results.map((map) => GroupedModel.fromMap(map)).toList();
+    final groupedResults = results
+        .map((map) => GroupedModel.fromMap(map))
+        .toList();
+
+    final filled = _fillMissingHourlyBuckets(
+      groupedResults: groupedResults,
+      start: start,
+      end: end,
+    );
+
+    return filled;
   }
 
   /// Get all data from the database bewteen the given dates (inclusive)
@@ -225,7 +239,7 @@ abstract class BaseHealthDataService<RawModel> {
             END) AS median
       FROM ranked
       GROUP BY time
-      ORDER BY time DESC;
+      ORDER BY time ASC;
     ''';
 
     final List<Map<String, dynamic>> results = await db.rawQuery(query, [
@@ -233,7 +247,13 @@ abstract class BaseHealthDataService<RawModel> {
       end.toIso8601String(),
     ]);
 
-    return results.map((map) => GroupedModel.fromMap(map)).toList();
+    final filled = _fillMissingDaylyBuckets(
+      groupedResults: results.map((map) => GroupedModel.fromMap(map)).toList(),
+      start: start,
+      end: end,
+    );
+
+    return filled;
   }
 
   /// Get all data from the database bewteen the given dates (inclusive)
@@ -281,7 +301,7 @@ abstract class BaseHealthDataService<RawModel> {
             END) AS median
       FROM ranked
       GROUP BY time
-      ORDER BY time DESC;
+      ORDER BY time ASC;
     ''';
 
     final List<Map<String, dynamic>> results = await db.rawQuery(query, [
@@ -289,6 +309,107 @@ abstract class BaseHealthDataService<RawModel> {
       end.toIso8601String(),
     ]);
 
-    return results.map((map) => GroupedModel.fromMap(map)).toList();
+    final filled = _fillMissingMonthlyBuckets(
+      groupedResults: results.map((map) => GroupedModel.fromMap(map)).toList(),
+      start: start,
+      end: end,
+    );
+
+    return filled;
+  }
+
+  List<GroupedModel> _fillMissingHourlyBuckets({
+    required List<GroupedModel> groupedResults,
+    required DateTime start,
+    required DateTime end,
+  }) {
+    if (!start.isBefore(end) || groupedResults.isEmpty) {
+      return [];
+    }
+
+    final filledResults = <GroupedModel>[];
+    var currentHour = start;
+    while (currentHour.isBefore(end)) {
+      var g = groupedResults.firstWhere((element) {
+        final isSameYear = element.time.year == currentHour.year;
+        final isSameMonth = element.time.month == currentHour.month;
+        final isSameDay = element.time.day == currentHour.day;
+        final isSameHour = element.time.hour == currentHour.hour;
+
+        return isSameYear && isSameMonth && isSameDay && isSameHour;
+      }, orElse: () => _emptyGroupedModel(currentHour));
+
+      filledResults.add(g);
+      currentHour = currentHour.add(const Duration(hours: 1));
+    }
+
+    return filledResults;
+  }
+
+  List<GroupedModel> _fillMissingDaylyBuckets({
+    required List<GroupedModel> groupedResults,
+    required DateTime start,
+    required DateTime end,
+  }) {
+    if (!start.isBefore(end) || groupedResults.isEmpty) {
+      return [];
+    }
+
+    final filledResults = <GroupedModel>[];
+    var currentDay = start;
+    while (currentDay.isBefore(end)) {
+      var g = groupedResults.firstWhere((element) {
+        final isSameYear = element.time.year == currentDay.year;
+        final isSameMonth = element.time.month == currentDay.month;
+        final isSameDay = element.time.day == currentDay.day;
+
+        return isSameYear && isSameMonth && isSameDay;
+      }, orElse: () => _emptyGroupedModel(currentDay));
+
+      filledResults.add(g);
+      currentDay = currentDay.add(const Duration(days: 1));
+    }
+
+    return filledResults;
+  }
+
+  List<GroupedModel> _fillMissingMonthlyBuckets({
+    required List<GroupedModel> groupedResults,
+    required DateTime start,
+    required DateTime end,
+  }) {
+    if (!start.isBefore(end) || groupedResults.isEmpty) {
+      return [];
+    }
+
+    final filledResults = <GroupedModel>[];
+    var currentMonth = start;
+    while (currentMonth.isBefore(end)) {
+      var g = groupedResults.firstWhere((element) {
+        final isSameYear = element.time.year == currentMonth.year;
+        final isSameMonth = element.time.month == currentMonth.month;
+
+        return isSameYear && isSameMonth;
+      }, orElse: () => _emptyGroupedModel(currentMonth));
+
+      filledResults.add(g);
+      currentMonth = currentMonth.add(const Duration(days: 1));
+    }
+
+    return filledResults;
+  }
+
+  GroupedModel _emptyGroupedModel(DateTime time) {
+    return GroupedModel(
+      time: time,
+      entries: 0,
+      total: 0,
+      first: 0,
+      last: 0,
+      maximum: 0,
+      minimum: 0,
+      average: 0,
+      median: 0,
+    );
   }
 }

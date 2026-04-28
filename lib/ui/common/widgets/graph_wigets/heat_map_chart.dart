@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cristalyse/cristalyse.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
+import 'package:flutter/material.dart';
 
 class HeatMapColourGradients {
   static final Map<String, List<Color>> heatMapColourGradients = {
@@ -47,11 +47,10 @@ class HeatMapChart extends BaseChart {
 
   @override
   Widget build(BuildContext context) {
-    CristalyseChart chart = buildChart()
+    CristalyseChart chart = buildChart(noMapping: true)
         .mappingHeatMap(x: mappingKeyX, y: mappingKeyY, value: mappingKeyColour)
         .geomHeatMap(
-          cellSpacing: 2,
-          cellAspectRatio: 1,
+          cellSpacing: 2.5,
           cellBorderRadius: BorderRadius.circular(4),
           interpolateColors: true,
           showValues: true,
@@ -60,7 +59,7 @@ class HeatMapChart extends BaseChart {
                     .heatMapColourGradients['blackToYellowToRed']
               : HeatMapColourGradients
                     .heatMapColourGradients['whiteToYellowToRed'],
-          valueFormatter: (value) => (value as double).round().toString(),
+          valueFormatter: (value) => value.round().toString(),
           valueTextStyle: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,

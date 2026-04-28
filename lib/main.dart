@@ -15,16 +15,15 @@ import 'package:elaros_mobile_app/domain/use_cases/sleep_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/step_count_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/user_goals_usecase.dart';
 import 'package:elaros_mobile_app/ui/home_page/view_model/home_page_view_model.dart';
+import 'package:elaros_mobile_app/ui/hr_zones_page/view_models/hr_zone_view_model.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
-import 'package:elaros_mobile_app/ui/test_page/view_model/test_page_view_model.dart';
 import 'package:elaros_mobile_app/ui/test_page_three/view_model/test_page_three_view_model.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  withClock(Clock.fixed(DateTime(2016, 5, 12)), () {
-    // ================================ User Data Repositories
+  withClock(Clock.fixed(DateTime(2016, 5, 11, 1)), () {
     final userProfileRepository = UserProfileRepository();
     final profileUseCase = ProfileUseCase(
       userProfileRepository: userProfileRepository,
@@ -35,7 +34,6 @@ void main() {
       userGoalsRepository: userGoalsRepository,
     );
 
-    // ================================ Health Data Repositories
     final heartRateRepository = HeartRateRepository();
     final heartRateUseCase = HeartRateUseCase(
       heartRateRepository,
@@ -86,8 +84,7 @@ void main() {
             ),
           ),
           ChangeNotifierProvider(
-            create: (_) =>
-                TestPageViewModel(heartRateUseCase: heartRateUseCase),
+            create: (_) => HrZoneViewModel(heartRateUseCase: heartRateUseCase),
           ),
         ],
         child: const App(),

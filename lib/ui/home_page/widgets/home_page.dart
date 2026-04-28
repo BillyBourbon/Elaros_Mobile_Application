@@ -1,9 +1,10 @@
 import 'package:elaros_mobile_app/ui/common/widgets/progress_bar.dart';
+import 'package:elaros_mobile_app/ui/common/widgets/simple_box.dart';
 import 'package:elaros_mobile_app/ui/home_page/view_model/home_page_view_model.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_calories.dart';
+import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_heart_rate.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_hrv.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_steps.dart';
-import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     colourScheme = theme!.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true),
+      appBar: AppBar(title: const Text('Home'), centerTitle: true),
       body: Container(
         alignment: Alignment.center,
         color: colourScheme!.primary,
@@ -148,8 +149,8 @@ class _HomePageState extends State<HomePage> {
                     units:
                         'bpm (max ${viewModel.maxHeartRatePast24Hr.toStringAsFixed(0)})',
                     insightPage: () =>
-                        // InsightsScreenHeartRate(homePageViewModel: viewModel),
-                        TestPage(),
+                        InsightsScreenHeartRate(homePageViewModel: viewModel),
+                    // TestPage(),
                   ),
 
                   _buildDailyMetricWidget(
@@ -199,41 +200,11 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(builder: (context) => insightPage()),
           );
         },
-        child: Container(
-          height: 30,
-          width: 60,
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: colourScheme!.secondary,
-            border: BoxBorder.all(color: Colors.grey.shade800),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    value,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    units,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        child: SimpleBox(
+          colourScheme: colourScheme,
+          title: title,
+          value: value,
+          units: units,
         ),
       ),
     );
@@ -279,7 +250,7 @@ class _HomePageState extends State<HomePage> {
               final zoneStart = hr > zone.max ? zoneEnd : zone.min / maxHr;
               final hrPosition = hr / maxHr;
 
-              final isActive = viewModel.currentHrZone.currentZone == zone.name;
+              final isActive = hrPosition > zoneStart && hrPosition < zoneEnd;
 
               return _buildHRZoneWidget(
                 name: zone.name,

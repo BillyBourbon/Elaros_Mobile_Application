@@ -24,4 +24,12 @@ class StepCountUseCase {
 
     return results.map((e) => GroupedEntity.fromMap(e.toMap())).toList();
   }
+
+  Future<List<GroupedEntity>?> getGroupedDataByDays({required int days}) async {
+    final results = await stepCountRepository.getDataGroupedByDay(
+      start: clock.now().subtract(Duration(days: days)),
+    );
+
+    return results.map((e) => GroupedEntity.fromMap(e.toMap())).toList();
+  }
 }

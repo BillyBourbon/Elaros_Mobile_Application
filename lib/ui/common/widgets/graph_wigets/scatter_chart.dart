@@ -14,6 +14,7 @@ class ScatterChart extends BaseChart {
     required super.data,
     required super.mappingKeyX,
     required super.mappingKeyY,
+    required super.colorScheme,
     super.mappingKeyColour,
     super.darkTheme,
     super.legendPosition,

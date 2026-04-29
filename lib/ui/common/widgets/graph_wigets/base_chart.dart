@@ -5,6 +5,7 @@ enum ScaleType { continuous, ordinal }
 
 abstract class BaseChart extends StatelessWidget {
   final List<Map<String, dynamic>> data;
+  final ColorScheme? colorScheme;
 
   final String mappingKeyX;
   final String mappingKeyY;
@@ -32,6 +33,7 @@ abstract class BaseChart extends StatelessWidget {
     required this.data,
     required this.mappingKeyX,
     required this.mappingKeyY,
+    required this.colorScheme,
     this.mappingKeyColour,
     this.darkTheme = true,
     this.legendPosition = LegendPosition.bottom,
@@ -127,9 +129,32 @@ abstract class BaseChart extends StatelessWidget {
       ),
     );
 
-    CristalyseChart chart = CristalyseChart()
-        .data(data)
-        .theme(darkTheme ? customThemeDark : customThemeLight);
+    ChartTheme chartTheme;
+
+    if (colorScheme != null) {
+      chartTheme = buildChartTheme(
+        backgroundColor: colorScheme!.secondary,
+        plotBackgroundColor: colorScheme!.primary,
+        primaryColor: colorScheme!.surfaceBright,
+        borderColor: colorScheme!.secondary,
+        gridColor: Colors.black54,
+        axisColor: Colors.black87,
+        axisTextStyle: const TextStyle(
+          fontSize: 11,
+          color: Color(0xFF5F6368),
+          fontWeight: FontWeight.w500,
+        ),
+        axisLabelStyle: const TextStyle(
+          fontSize: 13,
+          color: Color(0xFF202124),
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    } else {
+      chartTheme = darkTheme ? customThemeDark : customThemeLight;
+    }
+
+    CristalyseChart chart = CristalyseChart().data(data).theme(chartTheme);
     if (!noMapping) {
       if (mappingKeyColour != null) {
         chart.mapping(x: mappingKeyX, y: mappingKeyY, color: mappingKeyColour);

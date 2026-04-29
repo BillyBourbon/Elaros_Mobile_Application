@@ -270,7 +270,7 @@ abstract class BaseHealthDataService<RawModel> {
         '''
       WITH monthly AS (
         SELECT
-          strftime('%Y-%m', $timeColumn) AS time,
+          strftime('%Y-%m-01', $timeColumn) AS time,
           $timeColumn AS timestamp,
           $valueColumn AS value
         FROM $tableName
@@ -393,7 +393,7 @@ abstract class BaseHealthDataService<RawModel> {
       }, orElse: () => _emptyGroupedModel(currentMonth));
 
       filledResults.add(g);
-      currentMonth = currentMonth.add(const Duration(days: 1));
+      currentMonth = DateTime(currentMonth.year, currentMonth.month + 1);
     }
 
     return filledResults;

@@ -17,7 +17,7 @@ class UserGoalsViewModel extends BaseViewModel {
     try {
       final data = await userGoalsUseCase.getUserGoals();
       userGoals = data;
-      if (!isInitialLoad) message = 'Successfully fetched user goals';
+      if (isInitialLoad == true) message = 'Successfully fetched user goals';
     } catch (e) {
       isError = true;
       errorMessage = e.toString();

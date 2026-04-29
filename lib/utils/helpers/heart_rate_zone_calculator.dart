@@ -6,8 +6,14 @@ class HeartRateZone {
   final String name;
   final double min;
   final double max;
+  final String description;
 
-  HeartRateZone({required this.name, required this.min, required this.max});
+  HeartRateZone({
+    required this.name,
+    required this.min,
+    required this.max,
+    required this.description,
+  });
 
   bool contains(double hr, {bool isLast = false}) {
     return isLast ? hr >= min && hr <= max : hr >= min && hr < max;
@@ -38,11 +44,41 @@ class HeartRateZoneCalculator {
 
   static List<HeartRateZone> buildZones(double maxHr) {
     return [
-      HeartRateZone(name: 'Rest', min: 0.0, max: 0.5 * maxHr),
-      HeartRateZone(name: 'Recovery', min: 0.5 * maxHr, max: 0.6 * maxHr),
-      HeartRateZone(name: 'Sustainable', min: 0.6 * maxHr, max: 0.7 * maxHr),
-      HeartRateZone(name: 'Caution', min: 0.7 * maxHr, max: 0.85 * maxHr),
-      HeartRateZone(name: 'Risk', min: 0.85 * maxHr, max: double.infinity),
+      HeartRateZone(
+        name: 'Rest',
+        min: 0.0,
+        max: 0.5 * maxHr,
+        description:
+            'Low to moderate intensity. You can easily hold a conversation. You’re typically in this zone while warming up and cooling down, or during a relatively easy workout. It’s ideal for a recovery workout too.',
+      ),
+      HeartRateZone(
+        name: 'Recovery',
+        min: 0.5 * maxHr,
+        max: 0.6 * maxHr,
+        description:
+            'Moderate intensity. A light conversation is possible, though you might need to stop here and there to catch your breath. This zone is good for longer cardio activities to build endurance and for lighter workouts with lower injury risk.',
+      ),
+      HeartRateZone(
+        name: 'Sustainable',
+        min: 0.6 * maxHr,
+        max: 0.7 * maxHr,
+        description:
+            'Moderate intensity. A light conversation is possible, though you might need to stop here and there to catch your breath. This zone is good for longer cardio activities to build endurance and for lighter workouts with lower injury risk.',
+      ),
+      HeartRateZone(
+        name: 'Caution',
+        min: 0.7 * maxHr,
+        max: 0.85 * maxHr,
+        description:
+            'Moderate to high intensity. Chatter will be at a minimum as your breathing intensifies. A workout in this zone is comfortably hard and is good for building strength and endurance.',
+      ),
+      HeartRateZone(
+        name: 'Risk',
+        min: 0.85 * maxHr,
+        max: double.infinity,
+        description:
+            'High intensity. Talking takes effort. You’re pushing hard and approaching a redline effort to boost speed and strength. Workouts in this zone should usually be limited to one or two times a week.',
+      ),
     ];
   }
 

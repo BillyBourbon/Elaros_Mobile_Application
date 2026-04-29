@@ -1,6 +1,9 @@
+import 'package:elaros_mobile_app/ui/common/widgets/progress_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/hr_zones_page/view_models/hr_zone_view_model.dart';
+import 'package:elaros_mobile_app/utils/helpers/heart_rate_zone_calculator.dart';
+import 'package:elaros_mobile_app/utils/helpers/text_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +20,7 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
   final double contentWidth = 350;
 
   void _loadData() async {
-    await viewModel.loadHrZoneData(isInitialLoad: true);
+    await viewModel.getHRZoneRanges();
   }
 
   @override
@@ -40,7 +43,6 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               });
             }
-
             if (viewModel.message.isNotEmpty) {
               final snackBar = buildSuccessSnackBar(viewModel);
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,7 +63,8 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
 
   void _showZoneInfo({
     required String title,
-    required String percentage,
+    required num min,
+    required num max,
     required String description,
   }) {
     showModalBottomSheet(
@@ -85,7 +88,7 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                percentage,
+                '${min.toString()}bpm - ${max.toString()}bpm',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -174,6 +177,19 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
   }
 
   Widget _buildZoneCard(HrZoneViewModel viewModel) {
+    final zoneRanges = viewModel.hrZoneRanges;
+
+    final zoneColourScale = [
+      const Color(0xFF4CAF50),
+      const Color(0xFF2196F3),
+      const Color(0xFFFFC107),
+      const Color(0xFFE91E63),
+      const Color(0xFFF44336),
+    ];
+
+    String bpmMessage(HeartRateZone zone) =>
+        'Your heart rate in this zone between ${zone.min}bpm and ${zone.max == double.infinity ? viewModel.maxHeartRate : zone.max}bpm';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -191,76 +207,38 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
           ),
           const SizedBox(height: 14),
 
-          _buildZoneRow(
-            'Recovery (50-60%)',
-            0.45,
-            color: const Color(0xFF4CAF50),
-            title: 'Zone 1',
-            percentage: '50% to 60% of max heart rate',
-            description:
-                'Low to moderate intensity. You can easily hold a conversation. You’re typically in this zone while warming up and cooling down, or during a relatively easy workout. It’s ideal for a recovery workout too.',
-            bpmText:
-                'Your heart rate in this zone: ${viewModel.zone1Min}-${viewModel.zone1Max} bpm',
-          ),
+          ...zoneRanges.map((zone) {
+            final zoneI = zoneRanges.indexOf(zone);
 
-          _buildZoneRow(
-            'Sustainable (60-70%)',
-            0.55,
-            color: const Color(0xFF2196F3),
-            title: 'Zone 2',
-            percentage: '60% to 70% of max heart rate',
-            description:
-                'Moderate intensity. A light conversation is possible, though you might need to stop here and there to catch your breath. This zone is good for longer cardio activities to build endurance and for lighter workouts with lower injury risk.',
-            bpmText:
-                'Your heart rate in this zone: ${viewModel.zone2Min}-${viewModel.zone2Max} bpm',
-          ),
+            final color = zoneI > -1
+                ? zoneI > zoneColourScale.length - 1
+                      ? zoneColourScale.last
+                      : zoneColourScale[zoneI]
+                : zoneColourScale[0];
 
-          _buildZoneRow(
-            'Caution (70-80%)',
-            0.38,
-            color: const Color(0xFFFFC107),
-            title: 'Zone 3',
-            percentage: '70% to 80% of max heart rate',
-            description:
-                'Moderate to high intensity. Chatter will be at a minimum as your breathing intensifies. A workout in this zone is comfortably hard and is good for building strength and endurance.',
-            bpmText:
-                'Your heart rate in this zone: ${viewModel.zone3Min}-${viewModel.zone3Max} bpm',
-          ),
-
-          _buildZoneRow(
-            'Risk (80-90%)',
-            0.22,
-            color: const Color(0xFFE91E63),
-            title: 'Zone 4',
-            percentage: '80% to 90% of max heart rate',
-            description:
-                'High intensity. Talking takes effort. You’re pushing hard and approaching a redline effort to boost speed and strength. Workouts in this zone should usually be limited to one or two times a week.',
-            bpmText:
-                'Your heart rate in this zone: ${viewModel.zone4Min}-${viewModel.zone4Max} bpm',
-          ),
-
-          _buildZoneRow(
-            'Max Effort (90-100%)',
-            0.18,
-            color: const Color(0xFFF44336),
-            title: 'Zone 5',
-            percentage: '90% to 100% of max heart rate',
-            description:
-                'Very high intensity. You’re trying to breathe, not talk. This is a max effort activity. These exercises strengthen your heart by forcing it to work at peak capacity while also building fast-twitch muscle fibres.',
-            bpmText:
-                'Your heart rate in this zone: ${viewModel.zone5Min}-${viewModel.zone5Max} bpm',
-          ),
+            return _buildZoneRow(
+              label: TextUtilities.capitalize(zone.name),
+              title: TextUtilities.capitalize(zone.name),
+              color: color,
+              min: zone.min,
+              max: zone.max == double.infinity
+                  ? viewModel.maxHeartRate
+                  : zone.max.toInt(),
+              description: zone.description,
+              bpmText: bpmMessage(zone),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildZoneRow(
-    String label,
-    double fill, {
+  Widget _buildZoneRow({
+    required String label,
     required Color color,
     required String title,
-    required String percentage,
+    required double min,
+    required num max,
     required String description,
     required String bpmText,
   }) {
@@ -271,7 +249,8 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
         onTap: () {
           _showZoneInfo(
             title: title,
-            percentage: percentage,
+            min: min,
+            max: max,
             description: description,
           );
         },
@@ -293,16 +272,27 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
                     ),
                   ),
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: fill,
-                        minHeight: 7,
-                        backgroundColor: const Color(0xFFD9D9D9),
-                        valueColor: AlwaysStoppedAnimation<Color>(color),
-                      ),
+                    child: ProgressBar(
+                      height: 10,
+                      value:
+                          (min == 0 ? max * 0.8 : min) / viewModel.maxHeartRate,
+                      currentValue: max.toDouble(),
+                      backgroundColor: Colors.grey.shade300,
+                      segment2Color: Colors.grey.shade300,
+                      segment1Color: color,
                     ),
                   ),
+                  // Expanded(
+                  //   child: ClipRRect(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     child: LinearProgressIndicator(
+                  //       value: fill,
+                  //       minHeight: 7,
+                  //       backgroundColor: const Color(0xFFD9D9D9),
+                  //       valueColor: AlwaysStoppedAnimation<Color>(color),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 6),

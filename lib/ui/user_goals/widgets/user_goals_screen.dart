@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/ui/common/widgets/progress_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/user_goals/view_models/user_goals_view_model.dart';
@@ -62,6 +63,8 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               });
+
+              viewModel.message = '';
             }
             if (viewModel.isLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -128,7 +131,7 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
     int goalValue = goal.goalValue.toInt();
     int currentValue = goal.currentValue.toInt();
 
-    double percentCompleted = (currentValue / goalValue) * 100;
+    double percentCompleted = (currentValue / goalValue);
 
     if (percentCompleted < 0) {
       percentCompleted = 0;
@@ -136,11 +139,11 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
 
     Color iconColour = Colors.red;
 
-    if (percentCompleted >= 100) {
+    if (percentCompleted >= 1) {
       iconColour = Colors.green;
-    } else if (percentCompleted >= 50) {
+    } else if (percentCompleted >= 0.5) {
       iconColour = Colors.yellow;
-    } else if (percentCompleted >= 25) {
+    } else if (percentCompleted >= 0.25) {
       iconColour = Colors.orange;
     } else {
       iconColour = Colors.red;
@@ -156,45 +159,74 @@ class _UserGoalsScreenState extends State<UserGoalsScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: Column(
         children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              'Goal: ${goal.goalName} (${percentCompleted.toStringAsFixed(0)}%)',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 120,
-            child: Text(
-              'Target: ${goalValue.toString()} | Current: ${currentValue.toString()}',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-
-          SizedBox(width: 8),
-
-          SizedBox(width: 30, child: Icon(Icons.circle, color: iconColour)),
-
-          Column(
+          Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  viewModel.deleteUserGoal(goal);
-                },
-                icon: const Icon(Icons.delete),
-                color: Colors.red,
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  SizedBox(
+                    width: 150,
+                    child: Text(
+                      'Goal: ${goal.goalName}',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+
+                  SizedBox(
+                    child: Text(
+                      'Type: ${goal.dataSource}',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              SizedBox(
+                width: 150,
+                child: Text(
+                  '${currentValue.toStringAsFixed(0)}/${goalValue.toStringAsFixed(0)} (${(percentCompleted * 100).toStringAsFixed(0)}%)',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
+              Expanded(
+                child: ProgressBar(
+                  value: percentCompleted,
+                  height: 10,
+                  segment1Color: iconColour,
+                  segment2Color: Colors.grey.shade300,
+                ),
+              ),
+
+              Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      viewModel.deleteUserGoal(goal);
+                    },
+                    icon: const Icon(Icons.delete),
+                    color: Colors.red,
+                  ),
+                ],
               ),
             ],
           ),

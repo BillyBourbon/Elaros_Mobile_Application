@@ -11,7 +11,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+assets/database/main.db
 # Secrets files
 .env*
 

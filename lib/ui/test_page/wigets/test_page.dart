@@ -1,12 +1,7 @@
-import 'package:cristalyse/cristalyse.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/area_chart.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/bar_chart.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/heat_map_chart.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/line_chart.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/pie_chart.dart';
-import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/scatter_chart.dart';
+import 'package:elaros_mobile_app/ui/test_page/view_model/test_page_view_model.dart';
 import 'package:elaros_mobile_app/utils/helpers/date_utilities.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -17,7 +12,7 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   final double chartHeight = 300;
-  final bool darkTheme = true;
+  final bool darkTheme = false;
 
   List<Map<String, dynamic>> datasetScatterAndLine = [
     {'x': 1, 'y': 2, 'category': 'A'},
@@ -30,6 +25,18 @@ class _TestPageState extends State<TestPage> {
     {'x': 30, 'y': 4, 'category': 'C'},
     {'x': 40, 'y': 5, 'category': 'D'},
     {'x': 50, 'y': 6, 'category': 'E'},
+  ];
+  List<Map<String, dynamic>> datasetLine = [
+    {'x': 1, 'y': 2},
+    {'x': 2, 'y': 3},
+    {'x': 3, 'y': 4},
+    {'x': 4, 'y': 5},
+    {'x': 5, 'y': 6},
+    {'x': 10, 'y': 2},
+    {'x': 20, 'y': 3},
+    {'x': 30, 'y': 4},
+    {'x': 40, 'y': 5},
+    {'x': 50, 'y': 6},
   ];
 
   List<Map<String, dynamic>> datasetBar = [
@@ -112,102 +119,116 @@ class _TestPageState extends State<TestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Scatter Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: ScatterChart(
-                data: datasetScatterAndLine,
-                mappingKeyX: 'x',
-                mappingKeyY: 'y',
-                mappingKeyColour: 'category',
-                darkTheme: darkTheme,
-              ),
+      body: Consumer<TestPageViewModel>(
+        builder: (context, viewModel, child) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // const Text('Heat Map Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: chartHeight,
+                //   child: HeatMapChart(
+                //     data: getFormatedHeatMapData(),
+                //     mappingKeyX: 'day',
+                //     mappingKeyY: 'y',
+                //     mappingKeyColour: 'value',
+                //     legendPosition: null,
+                //     darkTheme: darkTheme,
+                //   ),
+                // ),
+
+                // const SizedBox(height: 8),
+
+                // const Text('Scatter Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: chartHeight,
+                //   child: ScatterChart(
+                //     data: datasetScatterAndLine,
+                //     mappingKeyX: 'x',
+                //     mappingKeyY: 'y',
+                //     mappingKeyColour: 'category',
+                //     darkTheme: darkTheme,
+                //   ),
+                // ),
+
+                // const SizedBox(height: 20),
+
+                // const Text('Line Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: chartHeight,
+                //   child: LineChart(
+                //     data: datasetLine,
+                //     mappingKeyX: 'x',
+                //     mappingKeyY: 'y',
+                //     mappingKeyColour: 'category',
+                //     darkTheme: darkTheme,
+                //   ),
+                // ),
+
+                // const SizedBox(height: 20),
+
+                // const Text('Area Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: chartHeight,
+                //   child: AreaChart(
+                //     data: datasetLine,
+                //     mappingKeyX: 'x',
+                //     mappingKeyY: 'y',
+                //     mappingKeyColour: 'category',
+                //     darkTheme: darkTheme,
+                //   ),
+                // ),
+
+                // const SizedBox(height: 20),
+
+                // const Text('Bar Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: chartHeight,
+                //   child: BarChart(
+                //     data: datasetBar,
+                //     mappingKeyX: 'quarter',
+                //     mappingKeyY: 'revenue',
+                //     mappingKeyColour: 'product',
+                //     darkTheme: darkTheme,
+                //     barStyle: BarStyle.grouped,
+                //     horizontalBars: true,
+                //   ),
+                // ),
+
+                // const SizedBox(height: 20),
+
+                // const Text('Pie Chart'),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   height: 400,
+                //   child: PieChart(
+                //     data: datasetPie,
+                //     mappingKeyX: 'category',
+                //     mappingKeyY: 'value',
+                //     outerRadius: 100,
+                //     darkTheme: darkTheme,
+                //   ),
+                // ),
+                // const SizedBox(height: 20),
+                Text('Heart Rate Insights'),
+                const SizedBox(height: 8),
+
+                // LineChart(
+                //   data: viewModel.allHeartRatePast24Hr,
+                //   mappingKeyX: 'date',
+                //   mappingKeyY: 'value',
+                // ),
+              ],
             ),
-
-            const SizedBox(height: 20),
-
-            const Text('Line Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: LineChart(
-                data: datasetScatterAndLine,
-                mappingKeyX: 'x',
-                mappingKeyY: 'y',
-                mappingKeyColour: 'category',
-                darkTheme: darkTheme,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            const Text('Area Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: AreaChart(
-                data: datasetScatterAndLine,
-                mappingKeyX: 'x',
-                mappingKeyY: 'y',
-                mappingKeyColour: 'category',
-                darkTheme: darkTheme,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            const Text('Bar Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: BarChart(
-                data: datasetBar,
-                mappingKeyX: 'quarter',
-                mappingKeyY: 'revenue',
-                mappingKeyColour: 'product',
-                darkTheme: darkTheme,
-                barStyle: BarStyle.grouped,
-                horizontalBars: true,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            const Text('Pie Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 400,
-              child: PieChart(
-                data: datasetPie,
-                mappingKeyX: 'category',
-                mappingKeyY: 'value',
-                outerRadius: 100,
-                darkTheme: darkTheme,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            const Text('Heat Map Chart'),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: chartHeight,
-              child: HeatMapChart(
-                data: getFormatedHeatMapData(),
-                mappingKeyX: 'day',
-                mappingKeyY: 'y',
-                mappingKeyColour: 'value',
-                legendPosition: null,
-                darkTheme: darkTheme,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

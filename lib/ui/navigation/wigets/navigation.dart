@@ -1,19 +1,11 @@
 // home page. routes to the other views.
-import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
-import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
-import 'package:elaros_mobile_app/ui/test_page/wigets/test_page.dart';
-import 'package:elaros_mobile_app/ui/user_goals/wigets/user_goals_screen.dart';
-import 'package:flutter/material.dart'
-    show
-        AppBar,
-        BuildContext,
-        Center,
-        Scaffold,
-        State,
-        StatefulWidget,
-        Text,
-        Widget;
 import 'package:elaros_mobile_app/ui/common/widgets/bottom_navbar.dart';
+import 'package:elaros_mobile_app/ui/home_page/widgets/home_page.dart';
+import 'package:elaros_mobile_app/ui/hr_zones_page/widgets/hr_zone.dart';
+import 'package:elaros_mobile_app/ui/profile_page/wigets/profile_screen.dart';
+import 'package:elaros_mobile_app/ui/test_page_three/wigets/test_page_three_new.dart';
+import 'package:elaros_mobile_app/ui/user_goals/widgets/user_goals_screen.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Elaros Mobile Health App'), centerTitle: true),
       body: _buildBody(),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
@@ -50,13 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const Center(child: Text('Health Tips'));
       case 2:
-        return TestPage();
+        return HrZoneScreen();
       case 3:
         return ProfileScreen();
       case 4:
         return UserGoalsScreen();
+      case 5:
+        return TestPageThree();
       default:
-        return const Center(child: Text('Home'));
+        return HomePage();
     }
   }
 }

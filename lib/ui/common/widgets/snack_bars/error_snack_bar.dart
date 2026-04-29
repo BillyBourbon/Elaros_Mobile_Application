@@ -8,3 +8,11 @@ SnackBar buildErrorSnackBar(BaseViewModel viewModel) {
     duration: const Duration(seconds: 3),
   );
 }
+
+SnackBar buildErrorSnackBarFromMessage(String message) {
+  return SnackBar(
+    content: Text(message),
+    backgroundColor: Colors.red,
+    duration: const Duration(seconds: 3),
+  );
+}

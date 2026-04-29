@@ -6,6 +6,7 @@ class UserGoalsViewModel extends BaseViewModel {
   final UserGoalsUseCase userGoalsUseCase;
 
   List<UserGoalEntity> userGoals = [];
+  bool isAddGoalOverlayOpen = false;
 
   UserGoalsViewModel({required this.userGoalsUseCase});
 
@@ -13,17 +14,17 @@ class UserGoalsViewModel extends BaseViewModel {
   Future<void> getUserGoals({bool isInitialLoad = false}) async {
     setLoading();
 
-    // try {
-    final data = await userGoalsUseCase.getUserGoals();
-    userGoals = data;
-    if (!isInitialLoad) message = 'Successfully fetched user goals';
-    // } catch (e) {
-    //   isError = true;
-    //   errorMessage = e.toString();
-    // } finally {
-    isLoading = false;
-    notifyListeners();
-    // }
+    try {
+      final data = await userGoalsUseCase.getUserGoals();
+      userGoals = data;
+      if (isInitialLoad == true) message = 'Successfully fetched user goals';
+    } catch (e) {
+      isError = true;
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> insertUserGoal(UserGoalEntity userGoal) async {
@@ -70,5 +71,34 @@ class UserGoalsViewModel extends BaseViewModel {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  // opens an overlay displaying a menu to add a new goal
+  void openAddGoalOverlay() {
+    isAddGoalOverlayOpen = true;
+    notifyListeners();
+  }
+
+  // closes the add goal overlay
+  void closeAddGoalOverlay() {
+    isAddGoalOverlayOpen = false;
+    notifyListeners();
+  }
+
+  // adds a new goal with the provided details
+  void addGoal({
+    required String goalName,
+    required String dataSource,
+    required int goalValue,
+  }) {
+    insertUserGoal(
+      UserGoalEntity(
+        goalName: goalName,
+        dataSource: dataSource,
+        goalValue: goalValue,
+        currentValue: 0,
+      ),
+    );
+    closeAddGoalOverlay();
   }
 }

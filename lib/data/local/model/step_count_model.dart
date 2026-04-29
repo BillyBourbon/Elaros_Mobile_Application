@@ -1,17 +1,17 @@
 class StepCountModel {
-  final DateTime date;
-  final int totalSteps;
+  final DateTime time;
+  final int value;
 
-  StepCountModel({required this.date, required this.totalSteps});
+  StepCountModel({required this.time, required this.value});
 
   Map<String, dynamic> toMap() {
-    return {'date': date.toIso8601String(), 'totalSteps': totalSteps};
+    return {'time': time.toIso8601String(), 'value': value};
   }
 
   factory StepCountModel.fromMap(Map<String, dynamic> map) {
     return StepCountModel(
-      date: DateTime.parse(map['day']),
-      totalSteps: (map['total_steps'] as int),
+      time: DateTime.parse(map['time']),
+      value: (map['value'] as int),
     );
   }
 }

@@ -1,7 +1,7 @@
-import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
+import 'package:elaros_mobile_app/ui/profile_page/wigets/user_settings_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late ProfilePageViewModel viewModel;
 
-  double contentWidth = 350;
+  ThemeData? theme;
+  ColorScheme? colourScheme;
 
   void _getProfileData() async {
     await viewModel.getUserProfile(isInitialLoad: true);
@@ -32,9 +33,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    theme = Theme.of(context);
+    colourScheme = theme!.colorScheme;
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => viewModel.openSettingsOverlay(),
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: Consumer<ProfilePageViewModel>(
         builder: (context, viewModel, child) {
+          if (viewModel.isSettingsOverlayOpen) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => UserSettingsOverlay(viewModel: viewModel),
+              );
+            });
+          }
+
           if (viewModel.isError) {
             SnackBar snackBar = buildErrorSnackBar(viewModel);
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -62,98 +86,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          children: [
-            _profileBanner(viewModel),
-
-            const SizedBox(height: 20),
-
-            _profileContainer(viewModel),
-
-            const SizedBox(height: 20),
-
-            saveSettingsButton(viewModel),
-
-            const SizedBox(height: 20),
-          ],
+          children: [_profileBanner(viewModel), const SizedBox(height: 20)],
         ),
-      ),
-    );
-  }
-
-  Widget saveSettingsButton(ProfilePageViewModel viewModel) {
-    return ElevatedButton(
-      onPressed: () => viewModel.saveUserProfile(),
-      child: const Text('Save Settings'),
-    );
-  }
-
-  Widget _profileContainer(ProfilePageViewModel viewModel) {
-    return Center(
-      child: SizedBox(
-        width: contentWidth,
-        child: ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: viewModel.userProfile.toMap().keys.length,
-          itemBuilder: (context, index) {
-            return _buildProfileListItem(viewModel, index);
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileListItem(ProfilePageViewModel viewModel, int index) {
-    final map = viewModel.userProfile.toMap();
-    final key = map.keys.toList()[index];
-    final value = map[key]?.toString() ?? '';
-
-    final controller = TextEditingController(text: value);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade300, width: 1),
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 90,
-            child: Text(
-              key
-                  .split('_')
-                  .map((e) => '${e[0].toUpperCase()}${e.substring(1)}')
-                  .join(' '),
-              style: textStyle,
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Expanded(
-            child: TextField(
-              controller: controller,
-              decoration: const InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-              ),
-              style: textStyle,
-              onChanged: (newValue) {
-                String oldValue = controller.text;
-                try {
-                  viewModel.updateField(key, newValue);
-                } catch (e) {
-                  controller.text = oldValue;
-                }
-              },
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -165,13 +99,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         bottom: false,
         child: Center(
           child: Container(
-            width: contentWidth,
+            width: 350,
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 50,
-                  backgroundColor: Colors.white,
+                  backgroundColor: colourScheme!.secondary,
                   child: Icon(Icons.person, size: 50),
                 ),
                 const SizedBox(height: 16),

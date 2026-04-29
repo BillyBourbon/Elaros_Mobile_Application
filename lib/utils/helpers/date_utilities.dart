@@ -1,4 +1,20 @@
 class DateUtilities {
+  static String getDateStringForQuery(DateTime dateTime) {
+    var day = dateTime.day >= 10 ? dateTime.day : '0${dateTime.day}';
+    var month = dateTime.month >= 10 ? dateTime.month : '0${dateTime.month}';
+    var year = dateTime.year;
+
+    var hours = dateTime.hour >= 10 ? dateTime.hour : '0${dateTime.hour}';
+    var minutes = dateTime.minute >= 10
+        ? dateTime.minute
+        : '0${dateTime.minute}';
+    var seconds = dateTime.second >= 10
+        ? dateTime.second
+        : '0${dateTime.second}';
+
+    return '$year-$month-$day $hours:$minutes:$seconds';
+  }
+
   static String getTimeString(DateTime dateTime) {
     var hour = dateTime.hour >= 10 ? dateTime.hour : '0${dateTime.hour}';
     var minute = dateTime.minute >= 10

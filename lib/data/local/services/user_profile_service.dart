@@ -27,7 +27,8 @@ class UserProfileService {
   Future<List<Map<String, dynamic>>> getUserProfile() async {
     final db = await database;
 
-    const String query = '''
+    final String query =
+        '''
       SELECT 
         name, 
         age, 
@@ -36,7 +37,7 @@ class UserProfileService {
         weight, 
         profile_image_url, 
         medical_condition
-      FROM UserProfile
+      FROM $_tableName
       WHERE
         id = ?;
     ''';

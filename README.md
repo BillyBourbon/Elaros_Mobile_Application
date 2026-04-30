@@ -10,15 +10,24 @@ This app makes use of several dependencies which may be found [here](#Libraries/
 The apps code is located in the lib folder and the assets folder contains the database file which is used to store the user's health data.
 
 Below are some screenshots of the app in action aswell as a link to a youtube video of the app.
-[Youtube Link](https://youtu.be/y6yEphzdNWw)
 
-![Home Page](https://gyazo.com/f9a244e41abc24e6c147a0529724e047)
+[The Apps Youtube Video](https://img.youtube.com/vi/y6yEphzdNWw/0.jpg)
 
-![The step count insights page](https://gyazo.com/c4c0b46cc9466ca35e93c24624403582)
+The Apps Home Page
 
-![Heart Rate Zones Modal](https://gyazo.com/4e5242a8cc647aec209e6dd6a35a50f2)
+![Home Page](https://i.gyazo.com/f9a244e41abc24e6c147a0529724e047.png)
 
-![Project Wireframes](https://gyazo.com/7a47722eca2554057981675bc19a30ee)
+The Step Count Insights Page
+
+![The step count insights page](https://i.gyazo.com/c4c0b46cc9466ca35e93c24624403582.png)
+
+The Heart Rate Zones Modal
+
+![Heart Rate Zones Modal](https://i.gyazo.com/4e5242a8cc647aec209e6dd6a35a50f2.png)
+
+The Project Wireframes
+
+![Project Wireframes](https://i.gyazo.com/7a47722eca2554057981675bc19a30ee.png)
 
 ## Installation
 

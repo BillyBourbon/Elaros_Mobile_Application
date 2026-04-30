@@ -4,6 +4,7 @@ import 'package:elaros_mobile_app/domain/models/heart_rate_model.dart';
 import 'package:elaros_mobile_app/domain/use_cases/calories_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/heart_rate_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/intensities_use_case.dart';
+import 'package:elaros_mobile_app/domain/use_cases/profile_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/sleep_use_case.dart';
 import 'package:elaros_mobile_app/domain/use_cases/step_count_use_case.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/view_models/base_view_model.dart';
@@ -17,6 +18,7 @@ class HomePageViewModel extends BaseViewModel {
   final CaloriesUseCase caloriesUseCase;
   final IntensitiesUseCase intensitiesUseCase;
   final SleepUseCase sleepUseCase;
+  final ProfileUseCase userProfileUseCase;
 
   HomePageViewModel({
     required this.heartRateUseCase,
@@ -24,6 +26,7 @@ class HomePageViewModel extends BaseViewModel {
     required this.caloriesUseCase,
     required this.intensitiesUseCase,
     required this.sleepUseCase,
+    required this.userProfileUseCase,
   });
 
   Future<void> init() async {
@@ -270,41 +273,31 @@ class HomePageViewModel extends BaseViewModel {
         start,
         end,
       );
-      final intensityStates = await intensitiesUseCase.getAllIntensityStates();
-      final sleepStates = await sleepUseCase.getAllSleepStates();
 
       final sleepData = await sleepUseCase.getAllSleepLogsBetween(start, end);
-      final sleepStateModels = await sleepUseCase.getAllSleepStates();
-
-      final heartRateData = await heartRateUseCase.getAllHeartRateBetween(
-        clock.now().subtract(const Duration(days: 1)),
-        clock.now(),
-      );
 
       final caloriesData = await caloriesUseCase.getPast24Hrs();
       final stepCountData = await stepCountUseCase.getPast24Hrs();
 
-      final validHeartRateData = heartRateData ?? [];
-      final validSleepData = sleepData;
-      final validCaloriesData = caloriesData;
-      final validStepCountData = stepCountData;
+      final userProfile = await userProfileUseCase.getUserProfile();
+
+      final weight = userProfile.first.weight;
 
       final energyScore = EnergyScoreCalculator.calculateEnergyScore(
-        weight: 100,
-        heartRates: validHeartRateData,
-        sleepLogs: validSleepData,
-        steps: validStepCountData,
-        calories: validCaloriesData,
+        weight: weight,
+        heartRates: allHeartRatePast24Hr,
+        sleepLogs: sleepData,
+        steps: stepCountData,
+        calories: caloriesData,
         intensities: data,
-        sleepStates: sleepStateModels,
-        intensityStates: intensityStates,
-        hrvBaseline: 22,
+        hrvBaseline: 60,
       );
 
       _energyScore = energyScore;
     } catch (e) {
       isError = true;
       errorMessage = e.toString();
+      rethrow;
     } finally {
       isLoading = false;
       notifyListeners();

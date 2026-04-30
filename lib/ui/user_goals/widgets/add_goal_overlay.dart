@@ -67,7 +67,11 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
+
     return AlertDialog(
+      backgroundColor: colourScheme.primary,
       title: const Text('Add New Goal'),
       content: Form(
         key: _formKey,
@@ -127,13 +131,18 @@ class _AddGoalOverlayState extends State<AddGoalOverlay> {
       ),
       actions: [
         TextButton(
+          style: DefaultButtonStyles.normalRed,
           onPressed: () {
             widget.viewModel.closeAddGoalOverlay();
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: DefaultTextStyles.defaultTextStyle),
         ),
-        ElevatedButton(onPressed: _submitGoal, child: const Text('Add Goal')),
+        ElevatedButton(
+          style: DefaultButtonStyles.elevatedSecondary(colourScheme),
+          onPressed: _submitGoal,
+          child: const Text('Add Goal'),
+        ),
       ],
     );
   }

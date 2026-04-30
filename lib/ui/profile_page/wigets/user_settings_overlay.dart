@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/input_elements/text/text_input.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,11 @@ class UserSettingsOverlay extends StatefulWidget {
 class _UserSettingsOverlayState extends State<UserSettingsOverlay> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return AlertDialog(
+      backgroundColor: colorScheme.primary,
       title: const Text('Settings'),
       content: SizedBox(
         width: double.maxFinite,
@@ -29,18 +34,21 @@ class _UserSettingsOverlayState extends State<UserSettingsOverlay> {
       ),
       actions: [
         TextButton(
+          style: DefaultButtonStyles.normalRed,
           onPressed: () {
             widget.viewModel.closeSettingsOverlay();
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: DefaultTextStyles.defaultTextStyleBold),
         ),
         ElevatedButton(
+          style: DefaultButtonStyles.elevatedSecondary(colorScheme),
           onPressed: () {
             widget.viewModel.saveUserProfile();
+            widget.viewModel.closeSettingsOverlay();
             Navigator.of(context).pop();
           },
-          child: const Text('Save'),
+          child: Text('Save', style: DefaultTextStyles.defaultTextStyleBold),
         ),
       ],
     );

@@ -48,6 +48,7 @@ class _UserInputDropdownState extends State<UserInputDropdown> {
     if (!widget.isMultiSelect) {
       field = DropdownButtonFormField<String>(
         initialValue: _selectedValue,
+        dropdownColor: colorScheme.secondary,
         items: widget.options
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
             .toList(),

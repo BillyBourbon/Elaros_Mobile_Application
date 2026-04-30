@@ -133,10 +133,10 @@ abstract class BaseChart extends StatelessWidget {
 
     if (colorScheme != null) {
       chartTheme = buildChartTheme(
-        backgroundColor: colorScheme!.secondary,
-        plotBackgroundColor: colorScheme!.primary,
+        backgroundColor: colorScheme!.primary,
+        plotBackgroundColor: colorScheme!.secondary,
         primaryColor: colorScheme!.surfaceBright,
-        borderColor: colorScheme!.secondary,
+        borderColor: colorScheme!.primary,
         gridColor: Colors.black54,
         axisColor: Colors.black87,
         axisTextStyle: const TextStyle(

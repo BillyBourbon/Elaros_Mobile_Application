@@ -25,7 +25,10 @@ class HeatMapColourGradients {
 }
 
 class HeatMapChart extends BaseChart {
-  const HeatMapChart({
+  final List<Color>? colourGradient;
+
+  const HeatMapChart(
+    this.colourGradient, {
     super.key,
     required super.data,
     required super.mappingKeyX,
@@ -55,11 +58,7 @@ class HeatMapChart extends BaseChart {
           cellBorderRadius: BorderRadius.circular(4),
           interpolateColors: true,
           showValues: true,
-          colorGradient: darkTheme
-              ? HeatMapColourGradients
-                    .heatMapColourGradients['blackToYellowToRed']
-              : HeatMapColourGradients
-                    .heatMapColourGradients['whiteToYellowToRed'],
+          colorGradient: colourGradient,
           valueFormatter: (value) => value.round().toString(),
           valueTextStyle: TextStyle(
             fontSize: 12,

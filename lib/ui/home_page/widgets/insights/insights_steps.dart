@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/bar_chart.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/heat_map_chart.dart';
@@ -31,7 +32,11 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
 
     return Scaffold(
       backgroundColor: colourScheme.primary,
-      appBar: AppBar(title: const Text('Step Count Insights')),
+      appBar: AppBar(
+        title: const Text('Step Count Insights'),
+        centerTitle: true,
+        titleTextStyle: DefaultTextStyles.defaultTextStyleAppBar,
+      ),
       body: Consumer<HomePageViewModel>(
         builder: (context, viewModel, child) {
           return _buildBody(viewModel, colourScheme);
@@ -82,11 +87,17 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
 
     return Column(
       children: [
-        Text('Your last 4 weeks of steps'),
+        const SizedBox(height: 8),
+        Text(
+          'Your last 4 weeks of steps',
+          style: DefaultTextStyles.defaultTextStyleTitleBold,
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 300,
           child: HeatMapChart(
+            HeatMapColourGradients
+                .heatMapColourGradients['greenToYellowToRed']!,
             colorScheme: colourScheme,
             data: formattedDataHeatmap,
             mappingKeyX: 'weekday',
@@ -111,7 +122,10 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
 
     return Column(
       children: [
-        Text('Total steps per hour over the last 24 hours'),
+        Text(
+          'Total steps per hour over the last 24 hours',
+          style: DefaultTextStyles.defaultTextStyleTitleBold,
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 300,

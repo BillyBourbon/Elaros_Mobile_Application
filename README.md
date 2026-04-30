@@ -93,7 +93,7 @@ flutter devices
 - launch device
 
 ```bash
-flutter devices --launch <device_id>
+flutter emulator --launch <device_id>
 ```
 
 - run the app on the connected emulator/device(via usb debugging)

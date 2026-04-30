@@ -1,6 +1,9 @@
 # Elaros Mobile Wellbeing App
 
-Professional Software Projects Group 3 Elaros Wellbeing app. A Flutter app written with Dart.
+Professional Software Projects Group 3 Elaros Wellbeing app.
+A Flutter app written with Dart.
+
+Link to the repository [here](https://github.com/BillyBourbon/Elaros_Mobile_Application/)
 
 ## Introduction
 
@@ -35,6 +38,8 @@ Note: Currently the app does not support the ingestion of live data due to that 
 
 the database file 'main.db' is located in a seperate google drive as it was too large for github to handle.
 please download the file and place it in the /assets/database folder of the project under the name 'main.db'
+
+[`main.db`](https://drive.google.com/file/d/1zP0NyBQdbT4szB6EbEzwScLmMIgsVW6z/view?usp=sharing)
 
 1. Run locally on an emulator (Requires Android Studio)
    1. Cone this repository to your machine

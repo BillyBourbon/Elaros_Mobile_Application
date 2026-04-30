@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/progress_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
@@ -32,8 +33,11 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFD3ECE7),
+      backgroundColor: colourScheme.primary,
       body: SafeArea(
         child: Consumer<HrZoneViewModel>(
           builder: (context, viewModel, child) {
@@ -73,35 +77,31 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
+        final theme = Theme.of(context);
+        final colourScheme = theme.colorScheme;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: colourScheme.primary,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: DefaultTextStyles.defaultTextStyleTitleBold),
+                const SizedBox(height: 8),
+                Text(
+                  '${min.toString()}bpm - ${max.toString()}bpm',
+                  style: DefaultTextStyles.defaultTextStyleLight,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${min.toString()}bpm - ${max.toString()}bpm',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                description,
-                style: const TextStyle(fontSize: 14, height: 1.5),
-              ),
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 14),
+                Text(description, style: DefaultTextStyles.defaultTextStyle),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         );
       },
@@ -119,17 +119,19 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
               _buildTopBar(),
               const SizedBox(height: 16),
               _buildStatCard(
+                context: context,
                 title: 'Max Heart Rate',
                 value: '${viewModel.maxHeartRate.toInt()} bpm',
                 highlighted: true,
               ),
               const SizedBox(height: 12),
               _buildStatCard(
+                context: context,
                 title: 'Resting Heart Rate',
                 value: '${viewModel.restingHeartRate.toInt()} bpm',
               ),
               const SizedBox(height: 16),
-              _buildZoneCard(viewModel),
+              _buildZoneCard(viewModel: viewModel, context: context),
               const SizedBox(height: 20),
             ],
           ),
@@ -139,10 +141,10 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
   }
 
   Widget _buildTopBar() {
-    return const Center(
+    return Center(
       child: Text(
         'Heart Rate Zones',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        style: DefaultTextStyles.defaultTextStyleTitleBold,
       ),
     );
   }
@@ -150,60 +152,58 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
   Widget _buildStatCard({
     required String title,
     required String value,
+    required BuildContext context,
     bool highlighted = false,
   }) {
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFE2D6B7),
+        color: colourScheme.secondary,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-          ),
+          Text(title, style: DefaultTextStyles.defaultTextStyleTitleBold),
           const SizedBox(height: 2),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800),
-          ),
+          Text(value, style: DefaultTextStyles.defaultTextStyleBold),
         ],
       ),
     );
   }
 
-  Widget _buildZoneCard(HrZoneViewModel viewModel) {
+  Widget _buildZoneCard({
+    required HrZoneViewModel viewModel,
+    required BuildContext context,
+  }) {
     final zoneRanges = viewModel.hrZoneRanges;
 
-    final zoneColourScale = [
-      const Color(0xFF4CAF50),
-      const Color(0xFF2196F3),
-      const Color(0xFFFFC107),
-      const Color(0xFFE91E63),
-      const Color(0xFFF44336),
-    ];
+    final zoneColourScale = DefaultColors.hrZoneColourScale.values.toList();
 
     String bpmMessage(HeartRateZone zone) =>
         'Your heart rate in this zone between ${zone.min}bpm and ${zone.max == double.infinity ? viewModel.maxHeartRate : zone.max}bpm';
+
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFE2D6B7),
+        color: colourScheme.secondary,
         borderRadius: BorderRadius.circular(14),
       ),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Heart Rate Zones',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+            style: DefaultTextStyles.defaultTextStyleTitleBold,
           ),
           const SizedBox(height: 14),
 
@@ -265,10 +265,7 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
                     width: 120,
                     child: Text(
                       label,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: DefaultTextStyles.defaultTextStyleLight,
                     ),
                   ),
                   Expanded(
@@ -282,17 +279,6 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
                       segment1Color: color,
                     ),
                   ),
-                  // Expanded(
-                  //   child: ClipRRect(
-                  //     borderRadius: BorderRadius.circular(10),
-                  //     child: LinearProgressIndicator(
-                  //       value: fill,
-                  //       minHeight: 7,
-                  //       backgroundColor: const Color(0xFFD9D9D9),
-                  //       valueColor: AlwaysStoppedAnimation<Color>(color),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
               const SizedBox(height: 6),
@@ -300,7 +286,7 @@ class _HrZoneScreenState extends State<HrZoneScreen> {
                 padding: const EdgeInsets.only(left: 120),
                 child: Text(
                   bpmText,
-                  style: const TextStyle(fontSize: 10, color: Colors.black87),
+                  style: DefaultTextStyles.defaultTextStyleLight,
                 ),
               ),
             ],

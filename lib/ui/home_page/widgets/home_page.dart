@@ -1,21 +1,21 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/progress_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/simple_box.dart';
 import 'package:elaros_mobile_app/ui/home_page/view_model/home_page_view_model.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_calories.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_heart_rate.dart';
-import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_hrv.dart';
 import 'package:elaros_mobile_app/ui/home_page/widgets/insights/insights_steps.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   late HomePageViewModel homePageViewModel;
 
   ThemeData? theme;
@@ -36,7 +36,11 @@ class _HomePageState extends State<HomePage> {
     colourScheme = theme!.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Home'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Home'),
+        centerTitle: true,
+        titleTextStyle: DefaultTextStyles.defaultTextStyleAppBar,
+      ),
       body: Container(
         alignment: Alignment.center,
         color: colourScheme!.primary,
@@ -62,6 +66,27 @@ class _HomePageState extends State<HomePage> {
     return Consumer<HomePageViewModel>(
       key: const Key('energyScore'),
       builder: (context, viewModel, child) {
+        final energyScore = viewModel.energyScore;
+
+        String? energyScoreText;
+        Color scoreColor = DefaultColors.red;
+        if (energyScore > 0 && energyScore < 25) {
+          scoreColor = DefaultColors.red;
+          energyScoreText = 'Very Low';
+        }
+        if (energyScore >= 25 && energyScore < 50) {
+          scoreColor = DefaultColors.orange;
+          energyScoreText = 'Low';
+        }
+        if (energyScore >= 50 && energyScore < 75) {
+          scoreColor = DefaultColors.yellow;
+          energyScoreText = 'Moderate';
+        }
+        if (energyScore >= 75) {
+          scoreColor = DefaultColors.green;
+          energyScoreText = 'High';
+        }
+
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -74,39 +99,33 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 alignment: Alignment.centerLeft,
-                child: const Text(
+                child: Text(
                   'Energy Score',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: DefaultTextStyles.defaultTextStyleTitleBold,
                   textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                '${viewModel.energyScore}',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                viewModel.energyScore.toStringAsFixed(2),
+                style: DefaultTextStyles.defaultTextStyleBold,
               ),
-              Text(
-                '/100',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
-              ),
+              Text('/100', style: DefaultTextStyles.defaultTextStyleLight),
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: Colors.amber.shade300,
+                  color: scoreColor,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.amber.shade700),
+                  border: Border.all(color: scoreColor.withAlpha(200)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      '${'Moderate'}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w200,
-                      ),
+                    Text(
+                      energyScoreText ?? 'Unknown',
+                      style: DefaultTextStyles.defaultTextStyle,
                     ),
                   ],
                 ),
@@ -126,9 +145,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Daily Metrics',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: DefaultTextStyles.defaultTextStyleTitleBold,
               ),
               const SizedBox(height: 8),
               GridView(
@@ -157,9 +176,8 @@ class _HomePageState extends State<HomePage> {
                     title: 'HRV',
                     value: (viewModel.hrv.rmssd).toStringAsFixed(2),
                     units: 'ms (RMSSD)',
-                    insightPage: () => InsightsScreenHeartRateVariability(
-                      homePageViewModel: viewModel,
-                    ),
+                    insightPage: () =>
+                        InsightsScreenHeartRate(homePageViewModel: viewModel),
                   ),
 
                   _buildDailyMetricWidget(
@@ -221,13 +239,7 @@ class _HomePageState extends State<HomePage> {
           final sorted = viewModel.hrZoneRanges.toList()
             ..sort((a, b) => a.max.compareTo(b.max));
 
-          final Map<int, Color> colorMap = {
-            0: Colors.blue.shade800,
-            1: Colors.green.shade600,
-            2: Colors.yellow.shade600,
-            3: Colors.orange.shade600,
-            4: Colors.red.shade600,
-          };
+          final Map<int, Color> colorMap = DefaultColors.hrZoneColourScale;
 
           zoneList = ListView.builder(
             shrinkWrap: true,
@@ -278,7 +290,7 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Heart Rate Zones',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: DefaultTextStyles.defaultTextStyleTitleBold,
                 ),
               ),
               const SizedBox(height: 4),
@@ -348,17 +360,13 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
+            child: Text(
               'Exertion Warnings',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: DefaultTextStyles.defaultTextStyleTitleBold,
             ),
           ),
         ],
       ),
     );
   }
-}
-
-class InsightsScreenSteps {
-  const InsightsScreenSteps();
 }

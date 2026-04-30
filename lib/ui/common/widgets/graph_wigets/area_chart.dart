@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cristalyse/cristalyse.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
+import 'package:flutter/material.dart';
 
 class AreaChart extends BaseChart {
   final double alpha;
@@ -15,6 +15,7 @@ class AreaChart extends BaseChart {
     required super.data,
     required super.mappingKeyX,
     required super.mappingKeyY,
+    required super.colorScheme,
     super.mappingKeyColour,
     super.darkTheme,
     super.legendPosition,

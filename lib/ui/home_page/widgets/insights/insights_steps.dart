@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/bar_chart.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/base_chart.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/graph_wigets/heat_map_chart.dart';
@@ -30,7 +31,12 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
     final colourScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Step Count Insights')),
+      backgroundColor: colourScheme.primary,
+      appBar: AppBar(
+        title: const Text('Step Count Insights'),
+        centerTitle: true,
+        titleTextStyle: DefaultTextStyles.defaultTextStyleAppBar,
+      ),
       body: Consumer<HomePageViewModel>(
         builder: (context, viewModel, child) {
           return _buildBody(viewModel, colourScheme);
@@ -41,22 +47,23 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
 
   Widget _buildBody(HomePageViewModel viewModel, ColorScheme colourScheme) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
           _insightsBar(colourScheme, viewModel),
           const SizedBox(height: 8),
-          _todaysBarChart(viewModel),
+          _todaysBarChart(viewModel, context),
           const SizedBox(height: 8),
-          _thisMonthsHeatmap(viewModel),
+          _thisMonthsHeatmap(viewModel, context),
+          const SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  Column _thisMonthsHeatmap(HomePageViewModel viewModel) {
+  Column _thisMonthsHeatmap(HomePageViewModel viewModel, BuildContext context) {
     final formattedDataHeatmap = viewModel.lastFourWeeksStepData
         .asMap()
         .entries
@@ -75,13 +82,23 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
         )
         .toList();
 
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
+
     return Column(
       children: [
-        Text('Your last 4 weeks of steps'),
+        const SizedBox(height: 8),
+        Text(
+          'Your last 4 weeks of steps',
+          style: DefaultTextStyles.defaultTextStyleTitleBold,
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 300,
           child: HeatMapChart(
+            HeatMapColourGradients
+                .heatMapColourGradients['greenToYellowToRed']!,
+            colorScheme: colourScheme,
             data: formattedDataHeatmap,
             mappingKeyX: 'weekday',
             mappingKeyY: 'week',
@@ -92,7 +109,7 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
     );
   }
 
-  Column _todaysBarChart(HomePageViewModel viewModel) {
+  Column _todaysBarChart(HomePageViewModel viewModel, BuildContext context) {
     final data = viewModel.todaysStepCountByHour!
       ..sort((a, b) => a.time.compareTo(b.time));
 
@@ -100,13 +117,20 @@ class _InsightsScreenStepCountState extends State<InsightsScreenStepCount> {
         .map((e) => {'hour': e.time.hour, 'value': e.total})
         .toList();
 
+    final theme = Theme.of(context);
+    final colourScheme = theme.colorScheme;
+
     return Column(
       children: [
-        Text('Total steps per hour over the last 24 hours'),
+        Text(
+          'Total steps per hour over the last 24 hours',
+          style: DefaultTextStyles.defaultTextStyleTitleBold,
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 300,
           child: BarChart(
+            colorScheme: colourScheme,
             data: formattedDataBarChart,
             mappingKeyX: 'hour',
             mappingKeyY: 'value',

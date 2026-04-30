@@ -1,3 +1,4 @@
+import 'package:elaros_mobile_app/config/constants/constants.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/error_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/common/widgets/snack_bars/success_snack_bar.dart';
 import 'package:elaros_mobile_app/ui/profile_page/view_model/profile_page_view_model.dart';
@@ -37,8 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     colourScheme = theme!.colorScheme;
 
     return Scaffold(
+      backgroundColor: colourScheme!.primary,
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile', style: DefaultTextStyles.defaultTextStyleAppBar),
         centerTitle: true,
         actions: [
           IconButton(
@@ -86,7 +88,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          children: [_profileBanner(viewModel), const SizedBox(height: 20)],
+          children: [
+            _profileBanner(viewModel),
+            const SizedBox(height: 20),
+            _buildUserDetails(viewModel),
+          ],
         ),
       ),
     );
@@ -110,13 +116,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Hello ${viewModel.userProfile.name}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  'Welcome back ${viewModel.userProfile.name}!',
+                  style: DefaultTextStyles.defaultTextStyleBold,
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserDetails(ProfilePageViewModel viewModel) {
+    return Column(
+      children: [
+        _buildUserDetailsCard(viewModel),
+        const SizedBox(height: 20),
+        _buildUserSettingsCard(viewModel),
+      ],
+    );
+  }
+
+  Widget _buildUserDetailsCard(ProfilePageViewModel viewModel) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      margin: EdgeInsetsDirectional.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: colourScheme!.secondary,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'User Details',
+            style: DefaultTextStyles.defaultTextStyleTitleBold,
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'Name: ${viewModel.userProfile.name}',
+            style: DefaultTextStyles.defaultTextStyleLight,
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'Age: ${viewModel.userProfile.age}',
+            style: DefaultTextStyles.defaultTextStyleLight,
+          ),
+          const SizedBox(height: 14),
+          Text(
+            "Gender: ${viewModel.userProfile.gender}",
+            style: DefaultTextStyles.defaultTextStyleLight,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserSettingsCard(ProfilePageViewModel viewModel) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      margin: EdgeInsetsDirectional.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: colourScheme!.secondary,
+        borderRadius: BorderRadius.circular(14),
+      ),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'User Settings',
+            style: DefaultTextStyles.defaultTextStyleTitleBold,
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'Height: ${viewModel.userProfile.height}cm',
+            style: DefaultTextStyles.defaultTextStyleLight,
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'Weight: ${viewModel.userProfile.weight}kg',
+            style: DefaultTextStyles.defaultTextStyleLight,
+          ),
+        ],
       ),
     );
   }

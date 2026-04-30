@@ -81,6 +81,7 @@ void main() {
               caloriesUseCase: caloriesUseCase,
               intensitiesUseCase: intensitiesUseCase,
               sleepUseCase: sleepUseCase,
+              userProfileUseCase: profileUseCase,
             ),
           ),
           ChangeNotifierProvider(
